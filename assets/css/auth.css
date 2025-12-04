@@ -1,0 +1,227 @@
+/* ==========================================================================
+   Auth Pages (Login, Register)
+   ========================================================================== */
+body.auth-page {
+    background: radial-gradient(circle at top, rgba(255, 140, 66, 0.15), transparent 60%),
+                radial-gradient(circle at bottom, rgba(34, 197, 94, 0.12), transparent 55%),
+                #0f172a;
+    color: #0f172a;
+}
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+}
+
+.bg-shapes {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.bg-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.7;
+}
+
+.bg-shape1 {
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 140, 66, 0.4);
+    top: -100px;
+    left: -100px;
+}
+
+.bg-shape2 {
+    width: 350px;
+    height: 350px;
+    background: rgba(34, 197, 94, 0.35);
+    bottom: -120px;
+    right: -60px;
+}
+
+.bg-shape3 {
+    width: 250px;
+    height: 250px;
+    background: rgba(59, 130, 246, 0.25);
+    bottom: 10%;
+    left: 15%;
+}
+
+.auth-box {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    padding: 2.5rem;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(25px);
+    box-shadow: 0 25px 80px rgba(15, 23, 42, 0.25);
+    z-index: 3;
+}
+
+.auth-logo {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-logo .logo-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #ff8c42, #ff6b35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin: 0 auto 1rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.form-group label {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper input,
+.input-wrapper select,
+.auth-form textarea {
+    width: 100%;
+    padding: 0.85rem 0.95rem;
+    padding-left: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.input-icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    opacity: 0.6;
+}
+
+.form-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+}
+
+.remember-me {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.forgot-password {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.divider {
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+}
+
+.signup-link {
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+.signup-link a {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.auth-container .alert {
+    border-radius: 12px;
+}
+
+.form-hint {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.role-info {
+    padding: 0.8rem;
+    border-radius: 12px;
+    background: rgba(34, 197, 94, 0.1);
+    color: #065f46;
+    display: none;
+}
+
+.role-info.active {
+    display: block;
+}
+
+.back-home {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    z-index: 4;
+}
+
+.back-home a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+.demo-credentials {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border-radius: 12px;
+    background: rgba(15, 23, 42, 0.05);
+    font-size: 0.9rem;
+}
+
+.password-toggle {
+    cursor: pointer;
+}
+
+@media (max-width: 640px) {
+    .auth-box {
+        padding: 2rem;
+    }
+
+    .back-home {
+        position: static;
+        margin-bottom: 1rem;
+    }
+}
+
