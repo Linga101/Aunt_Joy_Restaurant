@@ -185,7 +185,7 @@ include __DIR__ . '/views/templates/header.php';
 <section class="cta-strip">
     <div class="cta-strip-content">
         <div>
-            <p class="eyebrow">Ready to experience joy?</p>
+            <p class="eyebrow2">Ready to experience joy?</p>
             <h2>Place your first order and taste the difference.</h2>
         </div>
         <a href="/aunt_joy/views/customer/menu.php" class="btn btn-primary">Browse Menu</a>
