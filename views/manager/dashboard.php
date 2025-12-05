@@ -31,7 +31,7 @@ include '../templates/header.php';
         <!-- Report Filter -->
         <div class="card">
             <div class="card-header">
-                <h2>📅 Report Period</h2>
+                <h2>📅 Report Period & Export</h2>
             </div>
             <div class="card-body">
                 <div class="form-row">
@@ -68,15 +68,17 @@ include '../templates/header.php';
                             📊 Generate Report
                         </button>
                     </div>
+                </div>
 
+                <div class="form-row" style="margin-top: 1rem;">
                     <div class="form-group">
-                        <label>&nbsp;</label>
+                        <label>Export Summary Report</label>
                         <div class="export-buttons">
-                            <button class="btn-export pdf" onclick="exportPDF()">
-                                📄 PDF
+                            <button class="btn-export pdf" onclick="exportPDF()" title="Export report as PDF">
+                                📄 PDF Report
                             </button>
-                            <button class="btn-export excel" onclick="exportExcel()">
-                                📊 Excel
+                            <button class="btn-export excel" onclick="exportExcel()" title="Export report as Excel CSV">
+                                📊 Excel Report
                             </button>
                         </div>
                     </div>
@@ -249,11 +251,27 @@ function renderBestSellers(bestSellers) {
         const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
         const popularity = (item.total_quantity / maxQuantity) * 100;
         
-        // Build image HTML
-        let imageHTML = '🍽️';
-        if (item.image_url) {
-            const imagePath = item.image_url.startsWith('/') ? `/aunt_joy${item.image_url}` : `/aunt_joy/${item.image_url}`;
-            imageHTML = `<img src="${imagePath}" alt="${item.meal_name}" class="meal-thumbnail" onerror="this.textContent='🍽️'">`;
+        // Build image HTML - properly handle image paths
+        let imageHTML = '<span style="font-size: 2rem;">🍽️</span>';
+        if (item.image_url && item.image_url.trim() !== '') {
+            // Construct the correct image path
+            let imagePath = item.image_url;
+            
+            // Remove any leading/trailing whitespace
+            imagePath = imagePath.trim();
+            
+            // If path doesn't start with /, prepend /aunt_joy/
+            if (!imagePath.startsWith('/')) {
+                imagePath = '/aunt_joy/' + imagePath;
+            }
+            
+            // Ensure we have the correct base path
+            if (!imagePath.includes('/aunt_joy/')) {
+                imagePath = '/aunt_joy' + (imagePath.startsWith('/') ? imagePath : '/' + imagePath);
+            }
+            
+            // Create image element with proper error handling
+            imageHTML = `<img src="${imagePath}" alt="${item.meal_name}" class="meal-thumbnail" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\\"font-size: 2rem;\\\">🍽️</span>'" />`;
         }
         
         return `
@@ -264,16 +282,21 @@ function renderBestSellers(bestSellers) {
                 <td>
                     <div class="item-info">
                         <div class="item-image">${imageHTML}</div>
-                        <strong>${item.meal_name}</strong>
+                        <div>
+                            <strong>${item.meal_name}</strong>
+                            <br>
+                            <small style="color: var(--muted);">ID: ${item.meal_id}</small>
+                        </div>
                     </div>
                 </td>
                 <td>${item.category_name}</td>
-                <td><strong>${item.total_quantity}</strong></td>
+                <td><strong>${item.total_quantity}</strong> units</td>
                 <td><strong>${item.total_revenue_formatted}</strong></td>
                 <td>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${popularity}%"></div>
                     </div>
+                    <small style="color: var(--muted);">${Math.round(popularity)}%</small>
                 </td>
             </tr>
         `;
@@ -312,9 +335,44 @@ function exportPDF() {
     const month = document.getElementById('monthSelect').value;
     const year = document.getElementById('yearSelect').value;
     
-    showNotification('Generating PDF report...', 'info');
+    if (!month || !year) {
+        showNotification('Please select month and year first', 'error');
+        return;
+    }
     
-    window.open(`/aunt_joy/controllers/manager/export_pdf.php?month=${month}&year=${year}`, '_blank');
+    const btn = event.target.closest('button');
+    const originalText = btn.textContent;
+    
+    try {
+        // Disable button temporarily
+        btn.disabled = true;
+        btn.textContent = '⏳ Generating PDF...';
+        
+        showNotification('Generating PDF report...', 'info');
+        
+        // Open in new tab
+        const url = `/aunt_joy/controllers/manager/export_pdf.php?month=${month}&year=${year}`;
+        const downloadWindow = window.open(url, '_blank');
+        
+        if (!downloadWindow) {
+            showNotification('Please enable pop-ups to download PDF', 'error');
+            btn.disabled = false;
+            btn.textContent = originalText;
+            return;
+        }
+        
+        // Re-enable button after 3 seconds
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.textContent = originalText;
+            showNotification('PDF report exported successfully!', 'success');
+        }, 3000);
+    } catch (error) {
+        console.error('PDF export error:', error);
+        showNotification('Failed to export PDF: ' + error.message, 'error');
+        btn.disabled = false;
+        btn.textContent = originalText;
+    }
 }
 
 // Export to Excel
@@ -322,9 +380,44 @@ function exportExcel() {
     const month = document.getElementById('monthSelect').value;
     const year = document.getElementById('yearSelect').value;
     
-    showNotification('Generating Excel report...', 'info');
+    if (!month || !year) {
+        showNotification('Please select month and year first', 'error');
+        return;
+    }
     
-    window.open(`/aunt_joy/controllers/manager/export_excel.php?month=${month}&year=${year}`, '_blank');
+    const btn = event.target.closest('button');
+    const originalText = btn.textContent;
+    
+    try {
+        // Disable button temporarily
+        btn.disabled = true;
+        btn.textContent = '⏳ Generating Excel...';
+        
+        showNotification('Generating Excel report...', 'info');
+        
+        // Open in new tab
+        const url = `/aunt_joy/controllers/manager/export_excel.php?month=${month}&year=${year}`;
+        const downloadWindow = window.open(url, '_blank');
+        
+        if (!downloadWindow) {
+            showNotification('Please enable pop-ups to download Excel file', 'error');
+            btn.disabled = false;
+            btn.textContent = originalText;
+            return;
+        }
+        
+        // Re-enable button after 3 seconds
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.textContent = originalText;
+            showNotification('Excel report exported successfully!', 'success');
+        }, 3000);
+    } catch (error) {
+        console.error('Excel export error:', error);
+        showNotification('Failed to export Excel: ' + error.message, 'error');
+        btn.disabled = false;
+        btn.textContent = originalText;
+    }
 }
 </script>
 
