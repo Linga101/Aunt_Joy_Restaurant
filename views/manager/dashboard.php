@@ -249,6 +249,13 @@ function renderBestSellers(bestSellers) {
         const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
         const popularity = (item.total_quantity / maxQuantity) * 100;
         
+        // Build image HTML
+        let imageHTML = '🍽️';
+        if (item.image_url) {
+            const imagePath = item.image_url.startsWith('/') ? `/aunt_joy${item.image_url}` : `/aunt_joy/${item.image_url}`;
+            imageHTML = `<img src="${imagePath}" alt="${item.meal_name}" class="meal-thumbnail" onerror="this.textContent='🍽️'">`;
+        }
+        
         return `
             <tr>
                 <td>
@@ -256,7 +263,7 @@ function renderBestSellers(bestSellers) {
                 </td>
                 <td>
                     <div class="item-info">
-                        <span class="item-emoji">${item.image_url || '🍽️'}</span>
+                        <div class="item-image">${imageHTML}</div>
                         <strong>${item.meal_name}</strong>
                     </div>
                 </td>

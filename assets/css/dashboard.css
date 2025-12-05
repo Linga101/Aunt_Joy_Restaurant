@@ -115,6 +115,20 @@ body.dashboard-page {
     display: flex;
     align-items: center;
     gap: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    border-color: var(--orange);
+    box-shadow: 0 8px 24px rgba(255, 140, 66, 0.15);
+    transform: translateY(-2px);
+}
+
+.stat-card:last-child {
+    background: linear-gradient(135deg, rgba(255, 140, 66, 0.05), rgba(76, 29, 149, 0.03));
+    border-color: rgba(255, 140, 66, 0.2);
 }
 
 .stat-icon {
@@ -137,6 +151,37 @@ body.dashboard-page {
 .stat-content p {
     margin: 0;
     color: var(--muted);
+}
+
+.stat-subtitle {
+    display: inline-block;
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 500;
+}
+
+.best-seller-preview {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+.best-seller-image {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(255, 140, 66, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
 }
 
 .card-header {
@@ -911,5 +956,159 @@ body.dashboard-page {
     to {
         transform: rotate(360deg);
     }
+}
+
+/* Export Buttons */
+.export-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.btn-export {
+    padding: 0.85rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    font-family: inherit;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    min-width: 120px;
+}
+
+.btn-export.pdf {
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    color: #fff;
+}
+
+.btn-export.pdf:hover {
+    background: linear-gradient(135deg, var(--orange-dark), #ff5a1f);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+}
+
+.btn-export.excel {
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    color: #fff;
+}
+
+.btn-export.excel:hover {
+    background: linear-gradient(135deg, var(--orange-dark), #ff5a1f);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+}
+
+.btn-export:active {
+    transform: translateY(0);
+}
+
+.btn-export:disabled,
+.btn-export.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none;
+}
+
+/* Rank Badges in Top Sellers */
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    background: var(--surface-alt);
+    color: var(--dark);
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+}
+
+.rank-badge.gold {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #fff;
+    border-color: #f59e0b;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.rank-badge.silver {
+    background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+    color: #374151;
+    border-color: #9ca3af;
+    box-shadow: 0 4px 12px rgba(107, 114, 128, 0.2);
+}
+
+.rank-badge.bronze {
+    background: linear-gradient(135deg, #d4714e, #b45309);
+    color: #fff;
+    border-color: #b45309;
+    box-shadow: 0 4px 12px rgba(180, 83, 9, 0.3);
+}
+
+/* Item Info in Best Sellers Table */
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+}
+
+.item-image {
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: var(--surface-alt);
+    overflow: hidden;
+}
+
+.meal-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.item-emoji {
+    font-size: 1.5rem;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Progress Bar for Popularity */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--surface-alt);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--orange), var(--orange-dark));
+    border-radius: 999px;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 8px rgba(255, 140, 66, 0.4);
 }
 

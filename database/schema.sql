@@ -262,6 +262,66 @@ CREATE TABLE IF NOT EXISTS order_status_history (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ---------------------------------------------------------------------------
+-- Sample Orders Data for Testing
+-- ---------------------------------------------------------------------------
+-- Create sample customer user
+INSERT INTO users (user_id, role_id, username, email, password_hash, full_name, phone_number)
+VALUES
+    (
+        2,
+        1,
+        'john_customer',
+        'john@example.com',
+        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        'John Customer',
+        '+265 999 123 456'
+    ),
+    (
+        3,
+        1,
+        'jane_customer',
+        'jane@example.com',
+        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        'Jane Doe',
+        '+265 999 654 321'
+    ),
+    (
+        4,
+        4,
+        'manager_user',
+        'manager@auntjoy.test',
+        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        'Restaurant Manager',
+        '+265 999 111 111'
+    )
+ON DUPLICATE KEY UPDATE email = VALUES(email);
+
+-- Create sample orders for December 2025
+INSERT INTO orders (order_id, order_number, customer_id, delivery_address, contact_number, special_instructions, subtotal, delivery_fee, discount_amount, total_amount, order_status, payment_status, processed_by, order_date)
+VALUES
+    (1, 'AJ-2501', 2, 'City Center, Plot 14', '+265 999 123 456', 'Extra spicy please', 13000.00, 1500.00, 0, 14500.00, 'Delivered', 'Paid', 4, '2025-12-01 10:30:00'),
+    (2, 'AJ-2502', 3, 'Downtown Mzuzu', '+265 999 654 321', '', 10200.00, 1500.00, 500, 11200.00, 'Delivered', 'Paid', 4, '2025-12-02 14:15:00'),
+    (3, 'AJ-2503', 2, 'City Center, Plot 14', '+265 999 123 456', 'No onions', 21000.00, 2000.00, 0, 23000.00, 'Delivered', 'Paid', 4, '2025-12-03 11:45:00'),
+    (4, 'AJ-2504', 3, 'Downtown Mzuzu', '+265 999 654 321', '', 15500.00, 1500.00, 1000, 16000.00, 'Delivered', 'Paid', 4, '2025-12-04 12:20:00'),
+    (5, 'AJ-2505', 2, 'City Center, Plot 14', '+265 999 123 456', 'Rush delivery', 9500.00, 1500.00, 0, 11000.00, 'Out for Delivery', 'Paid', 4, '2025-12-05 09:00:00')
+ON DUPLICATE KEY UPDATE order_status = VALUES(order_status);
+
+-- Add order items
+INSERT INTO order_items (order_id, meal_id, meal_name, quantity, unit_price, subtotal)
+VALUES
+    (1, 2, 'Peri-Peri Chicken', 2, 6500.00, 13000.00),
+    (2, 1, 'Nsima & Beef Stew', 2, 3500.00, 7000.00),
+    (2, 3, 'Veggie Power Bowl', 1, 5200.00, 5200.00),
+    (3, 2, 'Peri-Peri Chicken', 2, 6500.00, 13000.00),
+    (3, 6, 'Grilled Chambo', 1, 6800.00, 6800.00),
+    (3, 8, 'Tamarind Glazed Wings', 1, 4500.00, 4500.00),
+    (4, 1, 'Nsima & Beef Stew', 3, 3500.00, 10500.00),
+    (4, 3, 'Veggie Power Bowl', 1, 5200.00, 5200.00),
+    (5, 2, 'Peri-Peri Chicken', 1, 6500.00, 6500.00),
+    (5, 8, 'Tamarind Glazed Wings', 1, 4500.00, 4500.00)
+ON DUPLICATE KEY UPDATE quantity = VALUES(quantity);
+
+-- ---------------------------------------------------------------------------
 -- Views to help reporting (optional but handy)
 -- ---------------------------------------------------------------------------
 CREATE OR REPLACE VIEW vw_order_summary AS
