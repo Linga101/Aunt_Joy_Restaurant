@@ -5,6 +5,7 @@
 :root {
     --orange: #ff8c42;
     --orange-dark: #4f2719;
+    --orange-dark2: #ff6b35;
     --green: #22c55e;
     --bg: #f5f7fb;
     --surface: #ffffff;
@@ -192,6 +193,14 @@ textarea.form-control {
 }
 
 .eyebrow {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    color: var(--orange-dark2);
+    font-weight: 700;
+}
+
+.eyebrow2 {
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 0.2rem;
@@ -473,13 +482,13 @@ html[data-theme='dark'] .hero-visual {
 
 .hero-card {
     position: relative;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--border);
     padding: 1.5rem;
     border-radius: var(--radius);
     box-shadow: 0 30px 80px rgba(15, 23, 42, 0.25);
     margin-bottom: 1rem;
     backdrop-filter: blur(12px);
-    color: #111827;
+    color: #ffffff;
 }
 
 .hero-card.secondary {
