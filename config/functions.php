@@ -247,7 +247,7 @@ function getAllUsers($roleId = null, $isActive = null) {
  * @param int $userId User creating the meal
  * @return array ['success' => bool, 'meal_id' => int|null, 'message' => string]
  */
-function addMeal($categoryId, $mealName, $mealDescription, $price, $imageUrl, $preparationTime = 20, $isAvailable = true, $isFeatured = false, $userId = null) {
+function addMeal($categoryId, $mealName, $mealDescription, $price, $imageUrl, $preparationTime = 45, $isAvailable = true, $isFeatured = false, $userId = null) {
     try {
         $db = getDB();
         
