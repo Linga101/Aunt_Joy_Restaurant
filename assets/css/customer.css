@@ -959,7 +959,7 @@ body.customer-page {
     padding: 0.35rem 0.9rem;
     border-radius: 999px;
     font-size: 0.85rem;
-    color: #fff;
+    color: var(--dark);
     backdrop-filter: blur(6px);
 }
 
