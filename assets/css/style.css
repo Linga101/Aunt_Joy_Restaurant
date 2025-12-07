@@ -540,26 +540,47 @@ html[data-theme='dark'] .hero-visual {
 .menu-slider-window {
     overflow: hidden;
     flex: 1;
+    perspective: 1200px;
 }
 
 .menu-slider-track {
     display: flex;
     gap: 1.5rem;
-    overflow-x: hidden;
+    overflow: hidden;
     padding: 0.5rem;
-    animation: slideLeft 40s linear infinite;
+    animation: circularStreamLeft 45s linear infinite;
+    will-change: transform;
+    transform-origin: center;
 }
 
 .menu-slider-track::-webkit-scrollbar {
     display: none;
 }
 
-@keyframes slideLeft {
+.menu-preview-card {
+    flex-shrink: 0;
+}
+
+@keyframes circularStreamLeft {
     0% {
-        transform: translateX(0);
+        transform: translateX(0) scaleY(1);
+        opacity: 1;
+    }
+    25% {
+        transform: translateX(calc(-25%)) scaleY(1.05);
+        opacity: 1;
+    }
+    50% {
+        transform: translateX(calc(-50%)) scaleY(1.1);
+        opacity: 1;
+    }
+    75% {
+        transform: translateX(calc(-75%)) scaleY(1.05);
+        opacity: 1;
     }
     100% {
-        transform: translateX(-50%);
+        transform: translateX(calc(-100%)) scaleY(1);
+        opacity: 1;
     }
 }
 

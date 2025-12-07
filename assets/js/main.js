@@ -425,7 +425,7 @@ function initNavGuards() {
 }
 
 /**
- * Initialize horizontal slider on landing page
+ * Initialize horizontal slider on landing page with continuous circular left scrolling
  */
 function initMenuSlider() {
     const slider = document.querySelector('.menu-slider');
@@ -437,11 +437,23 @@ function initMenuSlider() {
     const prevBtn = slider.querySelector('[data-direction="prev"]');
     const nextBtn = slider.querySelector('[data-direction="next"]');
 
-    if (!cards.length) return;
+    if (!cards.length || !track) return;
 
-    // Clone cards for seamless infinite scrolling
-    const cloneCards = Array.from(cards).map(card => card.cloneNode(true));
-    cloneCards.forEach(card => track.appendChild(card));
+    // Clone all cards multiple times to create seamless infinite circular streaming
+    // We need at least 3 sets of cards for smooth infinite looping
+    const originalCards = Array.from(cards);
+    const originalCardsLength = originalCards.length;
+    
+    // Clear and rebuild track with cloned cards
+    track.innerHTML = '';
+    
+    // Add cards 3 times to ensure seamless circular flow
+    for (let i = 0; i < 3; i++) {
+        originalCards.forEach(card => {
+            const clone = card.cloneNode(true);
+            track.appendChild(clone);
+        });
+    }
 
     // Handle pause on hover for continuous animation
     if (slider.dataset.autoplay === 'true') {
@@ -453,34 +465,29 @@ function initMenuSlider() {
         });
     }
 
-    // Handle manual navigation with prev/next buttons
-    const disableAnimationTemporarily = () => {
-        track.style.animationPlayState = 'paused';
+    // Handle manual navigation - adjust animation based on direction
+    let currentTranslate = 0;
+    
+    prevBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        track.classList.add('paused');
+        const cardWidth = originalCards[0].offsetWidth;
+        const gap = 24; // 1.5rem converted to pixels
+        const scrollAmount = cardWidth + gap;
+        currentTranslate -= scrollAmount;
+        track.style.transform = `translateX(${currentTranslate}px)`;
         track.style.animation = 'none';
-    };
-
-    const restoreAnimation = () => {
-        setTimeout(() => {
-            track.style.animation = '';
-            if (!track.classList.contains('paused')) {
-                track.style.animationPlayState = 'running';
-            }
-        }, 100);
-    };
-
-    prevBtn?.addEventListener('click', () => {
-        disableAnimationTemporarily();
-        const cardWidth = cards[0].offsetWidth + 24;
-        const currentScroll = track.scrollLeft;
-        track.scrollBy({ left: -cardWidth, behavior: 'smooth' });
-        restoreAnimation();
     });
 
-    nextBtn?.addEventListener('click', () => {
-        disableAnimationTemporarily();
-        const cardWidth = cards[0].offsetWidth + 24;
-        track.scrollBy({ left: cardWidth, behavior: 'smooth' });
-        restoreAnimation();
+    nextBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        track.classList.add('paused');
+        const cardWidth = originalCards[0].offsetWidth;
+        const gap = 24;
+        const scrollAmount = cardWidth + gap;
+        currentTranslate += scrollAmount;
+        track.style.transform = `translateX(${currentTranslate}px)`;
+        track.style.animation = 'none';
     });
 }
 
