@@ -437,43 +437,51 @@ function initMenuSlider() {
     const prevBtn = slider.querySelector('[data-direction="prev"]');
     const nextBtn = slider.querySelector('[data-direction="next"]');
 
-    const getStep = () => {
-        if (!cards.length) return windowEl.clientWidth;
-        return cards[0].offsetWidth + 24;
-    };
+    if (!cards.length) return;
 
-    const scrollByAmount = (amount) => {
-        track.scrollBy({ left: amount, behavior: 'smooth' });
-    };
+    // Clone cards for seamless infinite scrolling
+    const cloneCards = Array.from(cards).map(card => card.cloneNode(true));
+    cloneCards.forEach(card => track.appendChild(card));
 
-    prevBtn?.addEventListener('click', () => scrollByAmount(-getStep()));
-    nextBtn?.addEventListener('click', () => scrollByAmount(getStep()));
-
-    let autoSlideInterval = null;
-    const startAutoSlide = () => {
-        if (autoSlideInterval) return;
-        autoSlideInterval = setInterval(() => {
-            const nearEnd = track.scrollLeft + windowEl.clientWidth >= track.scrollWidth - 5;
-            if (nearEnd) {
-                track.scrollTo({ left: 0, behavior: 'smooth' });
-            } else {
-                scrollByAmount(getStep());
-            }
-        }, 4500);
-    };
-
-    const stopAutoSlide = () => {
-        if (autoSlideInterval) {
-            clearInterval(autoSlideInterval);
-            autoSlideInterval = null;
-        }
-    };
-
+    // Handle pause on hover for continuous animation
     if (slider.dataset.autoplay === 'true') {
-        startAutoSlide();
-        slider.addEventListener('mouseenter', stopAutoSlide);
-        slider.addEventListener('mouseleave', startAutoSlide);
+        slider.addEventListener('mouseenter', () => {
+            track.classList.add('paused');
+        });
+        slider.addEventListener('mouseleave', () => {
+            track.classList.remove('paused');
+        });
     }
+
+    // Handle manual navigation with prev/next buttons
+    const disableAnimationTemporarily = () => {
+        track.style.animationPlayState = 'paused';
+        track.style.animation = 'none';
+    };
+
+    const restoreAnimation = () => {
+        setTimeout(() => {
+            track.style.animation = '';
+            if (!track.classList.contains('paused')) {
+                track.style.animationPlayState = 'running';
+            }
+        }, 100);
+    };
+
+    prevBtn?.addEventListener('click', () => {
+        disableAnimationTemporarily();
+        const cardWidth = cards[0].offsetWidth + 24;
+        const currentScroll = track.scrollLeft;
+        track.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+        restoreAnimation();
+    });
+
+    nextBtn?.addEventListener('click', () => {
+        disableAnimationTemporarily();
+        const cardWidth = cards[0].offsetWidth + 24;
+        track.scrollBy({ left: cardWidth, behavior: 'smooth' });
+        restoreAnimation();
+    });
 }
 
 // Initialize on page load

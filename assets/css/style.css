@@ -545,14 +545,26 @@ html[data-theme='dark'] .hero-visual {
 .menu-slider-track {
     display: flex;
     gap: 1.5rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
+    overflow-x: hidden;
     padding: 0.5rem;
+    animation: slideLeft 40s linear infinite;
 }
 
 .menu-slider-track::-webkit-scrollbar {
     display: none;
+}
+
+@keyframes slideLeft {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.menu-slider-track.paused {
+    animation-play-state: paused;
 }
 
 .slider-btn {
