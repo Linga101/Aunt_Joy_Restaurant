@@ -97,8 +97,16 @@ function setupWindowFunctions() {
     window.openDashboardUserModal = openDashboardUserModal;
     window.closeDashboardUserModal = closeDashboardUserModal;
     window.submitDashboardUserForm = submitDashboardUserForm;
-    // Settings modals (coming soon)
-    window.openCategoriesModal = openCategoriesModal;
+    // Category management functions
+    window.loadCategories = loadCategories;
+    window.renderCategories = renderCategories;
+    window.openCategoryModal = openCategoryModal;
+    window.closeCategoryModal = closeCategoryModal;
+    window.submitCategoryForm = submitCategoryForm;
+    window.deleteCategory = deleteCategory;
+    window.editCategory = editCategory;
+    window.filterCategories = filterCategories;
+    // Settings modals
     window.openSettingsModal = openSettingsModal;
 }
 
@@ -143,9 +151,10 @@ async function initAdminDashboard() {
     try {
         await Promise.all([loadAdminStats(), loadRecentOrders()]);
         
-        // Pre-load meals and categories for dashboard modals
+        // Pre-load meals, categories, and users for dashboard modals
         await loadMeals();
         await loadMealCategories();
+        await loadCategories();
     } catch (error) {
         console.error("Failed to initialize admin dashboard:", error);
     }
@@ -1297,12 +1306,179 @@ function submitDashboardUserForm(event) {
 /* --------------------------------------------------------------------------
    Coming Soon Modals
    -------------------------------------------------------------------------- */
+// =========================================================================
+// CATEGORY MANAGEMENT
+// =========================================================================
 
-function openCategoriesModal() {
-    showNotification('Category management feature is coming in the next update!', 'info');
+async function loadCategories() {
+    try {
+        const result = await apiCall('admin/get_categories.php', 'GET');
+        if (result.success) {
+            adminState.categories = result.data || [];
+            renderCategories();
+        }
+    } catch (error) {
+        console.error('Failed to load categories:', error);
+        showNotification('Failed to load categories', 'error');
+    }
+}
+
+function renderCategories() {
+    const container = document.getElementById('categoriesTableBody');
+    if (!container) return;
+
+    if (adminState.categories.length === 0) {
+        container.innerHTML = '<tr><td colspan="5" class="text-center">No categories found. Create one to get started.</td></tr>';
+        return;
+    }
+
+    container.innerHTML = adminState.categories.map(cat => `
+        <tr>
+            <td>${escapeHtml(cat.category_name)}</td>
+            <td>${escapeHtml(cat.description || '-')}</td>
+            <td><span class="badge ${cat.is_active ? 'badge-success' : 'badge-danger'}">${cat.is_active ? 'Active' : 'Inactive'}</span></td>
+            <td>${cat.display_order}</td>
+            <td class="actions">
+                <button class="btn-icon btn-secondary" onclick="editCategory(${cat.category_id})" title="Edit">✎</button>
+                <button class="btn-icon btn-danger" onclick="deleteCategory(${cat.category_id}, '${cat.category_name.replace(/'/g, "\\'")}');" title="Delete">🗑</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function filterCategories() {
+    const searchInput = document.getElementById('categoriesSearchInput');
+    if (!searchInput) return;
+
+    const term = searchInput.value.toLowerCase();
+    const filtered = adminState.categories.filter(cat =>
+        cat.category_name.toLowerCase().includes(term) ||
+        (cat.description && cat.description.toLowerCase().includes(term))
+    );
+
+    const container = document.getElementById('categoriesTableBody');
+    if (!container) return;
+
+    if (filtered.length === 0) {
+        container.innerHTML = '<tr><td colspan="5" class="text-center">No categories match your search.</td></tr>';
+        return;
+    }
+
+    container.innerHTML = filtered.map(cat => `
+        <tr>
+            <td>${escapeHtml(cat.category_name)}</td>
+            <td>${escapeHtml(cat.description || '-')}</td>
+            <td><span class="badge ${cat.is_active ? 'badge-success' : 'badge-danger'}">${cat.is_active ? 'Active' : 'Inactive'}</span></td>
+            <td>${cat.display_order}</td>
+            <td class="actions">
+                <button class="btn-icon btn-secondary" onclick="editCategory(${cat.category_id})" title="Edit">✎</button>
+                <button class="btn-icon btn-danger" onclick="deleteCategory(${cat.category_id}, '${cat.category_name.replace(/'/g, "\\'")}');" title="Delete">🗑</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function openCategoryModal(categoryId = null) {
+    const modal = document.getElementById('categoryModal');
+    const form = document.getElementById('categoryForm');
+    
+    if (!modal || !form) {
+        showNotification('Error: Modal elements not found', 'error');
+        return;
+    }
+
+    form.reset();
+    document.getElementById('categoryId').value = '';
+    document.getElementById('categoryModalTitle').textContent = 'Add New Category';
+    document.getElementById('saveCategoryBtn').textContent = 'Create Category';
+
+    if (categoryId) {
+        const category = adminState.categories.find(c => c.category_id == categoryId);
+        if (category) {
+            document.getElementById('categoryId').value = category.category_id;
+            document.getElementById('categoryName').value = category.category_name;
+            document.getElementById('categoryDescription').value = category.description || '';
+            document.getElementById('categoryOrder').value = category.display_order;
+            document.getElementById('categoryIsActive').checked = !!category.is_active;
+            document.getElementById('categoryModalTitle').textContent = 'Edit Category';
+            document.getElementById('saveCategoryBtn').textContent = 'Update Category';
+        }
+    }
+
+    modal.classList.add('active');
+}
+
+function closeCategoryModal() {
+    const modal = document.getElementById('categoryModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+async function submitCategoryForm(event) {
+    event.preventDefault();
+
+    const categoryId = document.getElementById('categoryId').value;
+    const categoryName = document.getElementById('categoryName').value;
+    const categoryDescription = document.getElementById('categoryDescription').value;
+    const categoryOrder = document.getElementById('categoryOrder').value;
+    const isActive = document.getElementById('categoryIsActive').checked;
+
+    if (!categoryName.trim()) {
+        showNotification('Category name is required', 'error');
+        return;
+    }
+
+    try {
+        const payload = {
+            category_id: categoryId ? parseInt(categoryId) : null,
+            category_name: categoryName,
+            description: categoryDescription,
+            display_order: parseInt(categoryOrder),
+            is_active: isActive
+        };
+
+        const result = await apiCall('admin/save_category.php', 'POST', payload);
+
+        if (result.success) {
+            showNotification(result.message || 'Category saved successfully', 'success');
+            closeCategoryModal();
+            await loadCategories();
+        } else {
+            showNotification(result.message || 'Failed to save category', 'error');
+        }
+    } catch (error) {
+        console.error('Failed to save category:', error);
+        showNotification(error.message || 'Failed to save category', 'error');
+    }
+}
+
+function editCategory(categoryId) {
+    openCategoryModal(categoryId);
+}
+
+async function deleteCategory(categoryId, categoryName) {
+    if (!confirm(`Are you sure you want to delete "${categoryName}"? This cannot be undone if it has no associated meals.`)) {
+        return;
+    }
+
+    try {
+        const result = await apiCall('admin/delete_category.php', 'POST', { category_id: categoryId });
+        
+        if (result.success) {
+            showNotification(result.message || 'Category deleted', 'success');
+            await loadCategories();
+        } else {
+            showNotification(result.message || 'Failed to delete category', 'error');
+        }
+    } catch (error) {
+        console.error('Failed to delete category:', error);
+        showNotification(error.message || 'Failed to delete category', 'error');
+    }
 }
 
 function openSettingsModal() {
     showNotification('System settings feature is coming in the next update!', 'info');
 }
+
 

@@ -112,6 +112,9 @@ include '../templates/header.php';
                     <button class="btn btn-secondary" onclick="openDashboardUserModal()">
                         + Add New User
                     </button>
+                    <button class="btn btn-secondary" onclick="openCategoryModal()">
+                        + Manage Categories
+                    </button>
                 </div>
             </div>
         </div>
@@ -348,6 +351,111 @@ include '../templates/header.php';
                 </button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- Category Management Modal -->
+<div id="categoryModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="categoryModalTitle">Add New Category</h2>
+            <span class="modal-close" onclick="closeCategoryModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <!-- Category Form -->
+            <form id="categoryForm" onsubmit="submitCategoryForm(event)">
+                <input type="hidden" id="categoryId" name="category_id">
+
+                <div class="form-group">
+                    <label>Category Name *</label>
+                    <input 
+                        type="text" 
+                        id="categoryName" 
+                        name="category_name"
+                        class="form-control"
+                        placeholder="e.g., Local Favorites"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea 
+                        id="categoryDescription" 
+                        name="description"
+                        class="form-control"
+                        placeholder="Describe this category..."
+                        rows="3"
+                    ></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Display Order</label>
+                        <input 
+                            type="number" 
+                            id="categoryOrder" 
+                            name="display_order"
+                            class="form-control"
+                            value="1"
+                            min="1"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="categoryIsActive" name="is_active" checked>
+                            <span>Active</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="saveCategoryBtn">
+                        Create Category
+                    </button>
+                </div>
+            </form>
+
+            <!-- Categories List -->
+            <div class="card" style="margin-top: 2rem;">
+                <div class="card-header">
+                    <h3>All Categories</h3>
+                    <div class="search-box">
+                        <input 
+                            type="text" 
+                            id="categoriesSearchInput" 
+                            placeholder="Search categories..."
+                            class="form-control"
+                            onkeyup="filterCategories()"
+                        >
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Order</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoriesTableBody">
+                                <tr>
+                                    <td colspan="5" class="text-center">Loading categories...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
