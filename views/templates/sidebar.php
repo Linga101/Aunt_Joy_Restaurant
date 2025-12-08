@@ -70,6 +70,12 @@ $userRole = getCurrentUserRole();
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="/aunt_joy/views/admin/categories.php" class="nav-link">
+                        <span class="nav-icon">📂</span>
+                        <span>Categories Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="/aunt_joy/views/auth/profile.php" class="nav-link">
                         <span class="nav-icon">⚙️</span>
                         <span>Settings</span>

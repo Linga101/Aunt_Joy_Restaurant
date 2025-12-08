@@ -83,10 +83,10 @@ include '../templates/header.php';
                         <p>View and manage system users</p>
                     </button>
 
-                    <button class="action-card" onclick="openCategoriesModal()" disabled>
+                    <button class="action-card" onclick="openCategoryModal()">
                         <div class="action-icon">📂</div>
                         <h3>Categories</h3>
-                        <p>Coming in next update</p>
+                        <p>Add, edit or manage categories</p>
                     </button>
 
                     <button class="action-card" onclick="openSettingsModal()" disabled>
