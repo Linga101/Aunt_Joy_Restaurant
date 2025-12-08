@@ -106,6 +106,7 @@ function setupWindowFunctions() {
     window.deleteCategory = deleteCategory;
     window.editCategory = editCategory;
     window.filterCategories = filterCategories;
+    window.initCategoryModal = initCategoryModal;
     // Settings modals
     window.openSettingsModal = openSettingsModal;
 }
@@ -144,6 +145,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("dashboardUserModal")) {
         console.log("Initializing dashboard user modal");
         initDashboardUserModal();
+    }
+
+    // Initialize category modal
+    if (document.getElementById("categoryModal")) {
+        console.log("Initializing category modal");
+        initCategoryModal();
     }
 });
 
@@ -983,6 +990,25 @@ function initDashboardUserModal() {
     console.log("Added click outside listener");
 }
 
+function initCategoryModal() {
+    console.log("initCategoryModal called");
+    const modal = document.getElementById("categoryModal");
+    
+    console.log("Modal element:", modal);
+
+    // Close modal when clicking outside
+    window.addEventListener("click", (event) => {
+        const modal = document.getElementById("categoryModal");
+        if (event.target === modal) {
+            closeCategoryModal();
+        }
+    });
+    console.log("Added click outside listener for category modal");
+    
+    // Load categories on init
+    loadCategories();
+}
+
 /* --------------------------------------------------------------------------
    Dashboard Meal Modal Functions
    -------------------------------------------------------------------------- */
@@ -1435,6 +1461,9 @@ function openCategoryModal(categoryId = null) {
     
     // Load categories to display in the list
     loadCategories();
+    
+    // Focus on the form for better UX
+    document.getElementById('categoryName').focus();
 }
 
 function closeCategoryModal() {

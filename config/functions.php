@@ -730,6 +730,156 @@ function getCategoryById($categoryId) {
     }
 }
 
+/**
+ * Add a new category
+ * @param string $categoryName Category name
+ * @param string $description Category description
+ * @param int $displayOrder Display order
+ * @param bool $isActive Active status
+ * @return array ['success' => bool, 'category_id' => int|null, 'message' => string]
+ */
+function addCategory($categoryName, $description = '', $displayOrder = 1, $isActive = true) {
+    try {
+        $db = getDB();
+        
+        // Validate inputs
+        if (empty($categoryName)) {
+            return ['success' => false, 'message' => 'Category name is required'];
+        }
+        
+        if (strlen($categoryName) > 80) {
+            return ['success' => false, 'message' => 'Category name must not exceed 80 characters'];
+        }
+        
+        // Check for duplicate name
+        $checkStmt = $db->prepare("SELECT category_id FROM categories WHERE category_name = ?");
+        $checkStmt->execute([$categoryName]);
+        if ($checkStmt->fetch()) {
+            return ['success' => false, 'message' => 'A category with this name already exists'];
+        }
+        
+        // Insert category
+        $stmt = $db->prepare("
+            INSERT INTO categories (category_name, description, display_order, is_active)
+            VALUES (?, ?, ?, ?)
+        ");
+        
+        $stmt->execute([
+            $categoryName,
+            $description,
+            $displayOrder,
+            $isActive ? 1 : 0
+        ]);
+        
+        return [
+            'success' => true,
+            'category_id' => $db->lastInsertId(),
+            'message' => 'Category created successfully'
+        ];
+    } catch (Exception $e) {
+        return ['success' => false, 'message' => 'Error: ' . $e->getMessage()];
+    }
+}
+
+/**
+ * Update existing category
+ * @param int $categoryId Category ID to update
+ * @param string $categoryName Category name
+ * @param string $description Category description
+ * @param int $displayOrder Display order
+ * @param bool $isActive Active status
+ * @return array ['success' => bool, 'message' => string]
+ */
+function updateCategory($categoryId, $categoryName, $description = '', $displayOrder = 1, $isActive = true) {
+    try {
+        $db = getDB();
+        
+        // Validate inputs
+        if (empty($categoryName)) {
+            return ['success' => false, 'message' => 'Category name is required'];
+        }
+        
+        if (strlen($categoryName) > 80) {
+            return ['success' => false, 'message' => 'Category name must not exceed 80 characters'];
+        }
+        
+        // Check if category exists
+        $checkStmt = $db->prepare("SELECT category_id FROM categories WHERE category_id = ?");
+        $checkStmt->execute([$categoryId]);
+        if (!$checkStmt->fetch()) {
+            return ['success' => false, 'message' => 'Category not found'];
+        }
+        
+        // Check for duplicate name (excluding current category)
+        $dupCheckStmt = $db->prepare("
+            SELECT category_id FROM categories 
+            WHERE category_name = ? AND category_id != ?
+        ");
+        $dupCheckStmt->execute([$categoryName, $categoryId]);
+        if ($dupCheckStmt->fetch()) {
+            return ['success' => false, 'message' => 'A category with this name already exists'];
+        }
+        
+        // Update category
+        $stmt = $db->prepare("
+            UPDATE categories 
+            SET category_name = ?, description = ?, display_order = ?, is_active = ?
+            WHERE category_id = ?
+        ");
+        
+        $stmt->execute([
+            $categoryName,
+            $description,
+            $displayOrder,
+            $isActive ? 1 : 0,
+            $categoryId
+        ]);
+        
+        return ['success' => true, 'message' => 'Category updated successfully'];
+    } catch (Exception $e) {
+        return ['success' => false, 'message' => 'Error: ' . $e->getMessage()];
+    }
+}
+
+/**
+ * Delete category by ID
+ * @param int $categoryId Category ID to delete
+ * @return array ['success' => bool, 'message' => string]
+ */
+function deleteCategory($categoryId) {
+    try {
+        $db = getDB();
+        
+        // Check if category exists
+        $checkStmt = $db->prepare("SELECT category_name FROM categories WHERE category_id = ?");
+        $checkStmt->execute([$categoryId]);
+        $category = $checkStmt->fetch();
+        
+        if (!$category) {
+            return ['success' => false, 'message' => 'Category not found'];
+        }
+        
+        // Check if category has associated meals
+        $mealCheckStmt = $db->prepare("
+            SELECT COUNT(*) as meal_count FROM meals WHERE category_id = ?
+        ");
+        $mealCheckStmt->execute([$categoryId]);
+        $mealCheck = $mealCheckStmt->fetch();
+        
+        if ($mealCheck['meal_count'] > 0) {
+            return ['success' => false, 'message' => 'Cannot delete category with associated meals. Remove all meals from this category first.'];
+        }
+        
+        // Safe to delete
+        $stmt = $db->prepare("DELETE FROM categories WHERE category_id = ?");
+        $stmt->execute([$categoryId]);
+        
+        return ['success' => true, 'message' => 'Category deleted successfully'];
+    } catch (Exception $e) {
+        return ['success' => false, 'message' => 'Error: ' . $e->getMessage()];
+    }
+}
+
 // =========================================================================
 // REPORTING/ANALYTICS FUNCTIONS
 // =========================================================================

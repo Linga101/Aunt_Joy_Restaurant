@@ -312,7 +312,7 @@ body.dashboard-page {
         transform: translateY(20px);
     }
     to {
-        opacity: 0;
+        opacity: 1;
         transform: translateY(0);
     }
 }
@@ -450,6 +450,9 @@ body.dashboard-page {
     text-align: left;
     transition: all 0.2s ease;
     pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .action-card:disabled {
@@ -466,6 +469,26 @@ body.dashboard-page {
 
 .action-card:not(:disabled):active {
     transform: translateY(-2px);
+}
+
+.action-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.action-card h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.action-card p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
 }
 
 /* Quick Add Buttons */
