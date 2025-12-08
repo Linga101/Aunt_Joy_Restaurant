@@ -439,21 +439,17 @@ function initMenuSlider() {
 
     if (!cards.length || !track) return;
 
-    // Clone all cards multiple times to create seamless infinite circular streaming
-    // We need at least 3 sets of cards for smooth infinite looping
+    // Store original cards before cloning
     const originalCards = Array.from(cards);
-    const originalCardsLength = originalCards.length;
     
-    // Clear and rebuild track with cloned cards
-    track.innerHTML = '';
-    
-    // Add cards 3 times to ensure seamless circular flow
-    for (let i = 0; i < 3; i++) {
-        originalCards.forEach(card => {
+    // Clone all cards 2 more times to create seamless infinite circular streaming
+    // Total: 3 sets of cards (original + 2 clones)
+    originalCards.forEach(card => {
+        for (let i = 0; i < 2; i++) {
             const clone = card.cloneNode(true);
             track.appendChild(clone);
-        });
-    }
+        }
+    });
 
     // Handle pause on hover for continuous animation
     if (slider.dataset.autoplay === 'true') {

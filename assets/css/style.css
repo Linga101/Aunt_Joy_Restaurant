@@ -563,24 +563,10 @@ html[data-theme='dark'] .hero-visual {
 
 @keyframes circularStreamLeft {
     0% {
-        transform: translateX(0) scaleY(1);
-        opacity: 1;
-    }
-    25% {
-        transform: translateX(calc(-25%)) scaleY(1.05);
-        opacity: 1;
-    }
-    50% {
-        transform: translateX(calc(-50%)) scaleY(1.1);
-        opacity: 1;
-    }
-    75% {
-        transform: translateX(calc(-75%)) scaleY(1.05);
-        opacity: 1;
+        transform: translateX(0);
     }
     100% {
-        transform: translateX(calc(-100%)) scaleY(1);
-        opacity: 1;
+        transform: translateX(calc(-33.333%));
     }
 }
 
