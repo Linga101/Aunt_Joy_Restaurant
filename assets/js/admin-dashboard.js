@@ -1339,11 +1339,24 @@ function renderCategories() {
             <td><span class="badge ${cat.is_active ? 'badge-success' : 'badge-danger'}">${cat.is_active ? 'Active' : 'Inactive'}</span></td>
             <td>${cat.display_order}</td>
             <td class="actions">
-                <button class="btn-icon btn-secondary" onclick="editCategory(${cat.category_id})" title="Edit">✎</button>
-                <button class="btn-icon btn-danger" onclick="deleteCategory(${cat.category_id}, '${cat.category_name.replace(/'/g, "\\'")}');" title="Delete">🗑</button>
+                <button type="button" class="btn-icon btn-secondary" data-action="edit" data-id="${cat.category_id}" title="Edit">✎</button>
+                <button type="button" class="btn-icon btn-danger" data-action="delete" data-id="${cat.category_id}" data-name="${escapeHtml(cat.category_name)}" title="Delete">🗑</button>
             </td>
         </tr>
     `).join('');
+    
+    // Add event listeners to dynamically created buttons
+    document.querySelectorAll('#categoriesTableBody button[data-action="edit"]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            editCategory(parseInt(this.dataset.id));
+        });
+    });
+    
+    document.querySelectorAll('#categoriesTableBody button[data-action="delete"]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            deleteCategory(parseInt(this.dataset.id), this.dataset.name);
+        });
+    });
 }
 
 function filterCategories() {
@@ -1371,11 +1384,24 @@ function filterCategories() {
             <td><span class="badge ${cat.is_active ? 'badge-success' : 'badge-danger'}">${cat.is_active ? 'Active' : 'Inactive'}</span></td>
             <td>${cat.display_order}</td>
             <td class="actions">
-                <button class="btn-icon btn-secondary" onclick="editCategory(${cat.category_id})" title="Edit">✎</button>
-                <button class="btn-icon btn-danger" onclick="deleteCategory(${cat.category_id}, '${cat.category_name.replace(/'/g, "\\'")}');" title="Delete">🗑</button>
+                <button type="button" class="btn-icon btn-secondary" data-action="edit" data-id="${cat.category_id}" title="Edit">✎</button>
+                <button type="button" class="btn-icon btn-danger" data-action="delete" data-id="${cat.category_id}" data-name="${escapeHtml(cat.category_name)}" title="Delete">🗑</button>
             </td>
         </tr>
     `).join('');
+    
+    // Add event listeners to dynamically created buttons
+    document.querySelectorAll('#categoriesTableBody button[data-action="edit"]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            editCategory(parseInt(this.dataset.id));
+        });
+    });
+    
+    document.querySelectorAll('#categoriesTableBody button[data-action="delete"]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            deleteCategory(parseInt(this.dataset.id), this.dataset.name);
+        });
+    });
 }
 
 function openCategoryModal(categoryId = null) {
@@ -1406,6 +1432,9 @@ function openCategoryModal(categoryId = null) {
     }
 
     modal.classList.add('active');
+    
+    // Load categories to display in the list
+    loadCategories();
 }
 
 function closeCategoryModal() {

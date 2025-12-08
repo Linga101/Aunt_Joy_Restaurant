@@ -913,3 +913,45 @@ body.dashboard-page {
     }
 }
 
+/* Table Actions Column */
+.table td.actions {
+    text-align: center;
+    white-space: nowrap;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.table .btn-icon {
+    padding: 0.4rem 0.6rem;
+    min-width: 32px;
+    min-height: 32px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.table .btn-icon.btn-secondary {
+    background-color: #e2e8f0;
+    color: #334155;
+}
+
+.table .btn-icon.btn-secondary:hover {
+    background-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+.table .btn-icon.btn-danger {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.table .btn-icon.btn-danger:hover {
+    background-color: #fecaca;
+    transform: translateY(-1px);
+}
+
+
