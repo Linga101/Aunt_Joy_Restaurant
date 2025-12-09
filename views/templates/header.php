@@ -82,20 +82,9 @@ require_once __DIR__ . '/../../config/db.php';
 
                 <div class="nav-actions">
                     <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
-                        <span class="theme-icon">🌙</span>
+                        <span class="theme-icon"><img src="assets/images/icons/moon_16740252.png"></span>
                     </button>
-
-                    <a 
-                        href="<?php echo $cartUrl; ?>" 
-                        class="nav-cart <?php echo ($isLoggedIn && $currentRole === 'Customer') ? '' : 'requires-login'; ?>"
-                        data-requires-auth="<?php echo ($isLoggedIn && $currentRole === 'Customer') ? 'false' : 'true'; ?>"
-                        data-auth-message="Login to view and manage your cart."
-                        data-redirect="/aunt_joy/views/auth/login.php?next=cart"
-                    >
-                        <span class="cart-icon">🛒</span>
-                        <span class="cart-text">Cart</span>
-                        <span id="cartBadge" class="cart-badge">0</span>
-                    </a>
+                    
 
                     <?php if($isLoggedIn): ?>
                         <div class="nav-user-chip">

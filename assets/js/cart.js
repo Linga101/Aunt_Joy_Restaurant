@@ -4,23 +4,24 @@
  */
 
 function hasCartAccess(showPrompt = false) {
-    const loggedIn = window.AUNT_JOY?.isLoggedIn;
-    const role = window.AUNT_JOY?.role;
-    const allowed = Boolean(loggedIn && role === 'Customer');
-    if (!allowed && showPrompt) {
-        showNotification('Please log in as a customer to use the cart.', 'warning');
-        setTimeout(() => {
-            window.location.href = '/aunt_joy/views/auth/login.php?next=menu';
-        }, 900);
+    if (showPrompt) {
+        const loggedIn = window.AUNT_JOY?.isLoggedIn;
+        const role = window.AUNT_JOY?.role;
+        const allowed = Boolean(loggedIn && role === 'Customer');
+        if (!allowed) {
+            showNotification('Please log in as a customer to use the cart.', 'warning');
+            setTimeout(() => {
+                window.location.href = '/aunt_joy/views/auth/login.php?next=menu';
+            }, 900);
+        }
+        return allowed;
     }
-    return allowed;
+    return true; // Always allow access when showPrompt is false
 }
 
 function getCartStorageKey() {
-    if (!window.AUNT_JOY?.userId) {
-        return null;
-    }
-    return `auntJoyCart_${window.AUNT_JOY.userId}`;
+    const userId = window.AUNT_JOY?.userId || 'guest';
+    return `auntJoyCart_${userId}`;
 }
 
 /**
@@ -28,13 +29,7 @@ function getCartStorageKey() {
  * @return {Array} Cart items
  */
 function getCart() {
-    if (!hasCartAccess()) {
-        return [];
-    }
     const storageKey = getCartStorageKey();
-    if (!storageKey) {
-        return [];
-    }
     const cart = localStorage.getItem(storageKey);
     return cart ? JSON.parse(cart) : [];
 }
@@ -44,11 +39,7 @@ function getCart() {
  * @param {Array} cart - Cart items
  */
 function saveCart(cart) {
-    if (!hasCartAccess(true)) {
-        return;
-    }
     const storageKey = getCartStorageKey();
-    if (!storageKey) return;
     localStorage.setItem(storageKey, JSON.stringify(cart));
 }
 
@@ -61,9 +52,6 @@ function saveCart(cart) {
  * @param {number} quantity - Quantity (default: 1)
  */
 function addToCart(mealId, mealName, price, imageUrl = '', quantity = 1) {
-    if (!hasCartAccess(true)) {
-        return;
-    }
     const cart = getCart();
     
     // Check if item already exists
@@ -131,13 +119,6 @@ function updateQuantity(index, change) {
  * Clear entire cart
  */
 function clearCart() {
-    if (!hasCartAccess()) {
-        return;
-    }
-    const storageKey = getCartStorageKey();
-    if (!storageKey) {
-        return;
-    }
     if (getCart().length === 0) {
         showNotification('Your cart is already empty.', 'info');
         return;
@@ -145,6 +126,7 @@ function clearCart() {
     if (!confirm('Clear all items from your cart?')) {
         return;
     }
+    const storageKey = getCartStorageKey();
     localStorage.removeItem(storageKey);
     updateCartCount();
     
@@ -176,7 +158,7 @@ function getCartSubtotal() {
  * Update cart count badge
  */
 function updateCartCount() {
-    const count = hasCartAccess() ? getCartCount() : 0;
+    const count = getCartCount();
     const badges = document.querySelectorAll('#cartCount, #cartBadge, #floatingCartBadge');
     
     badges.forEach(badge => {

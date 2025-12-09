@@ -1,7 +1,5 @@
 <?php
 require_once '../../config/db.php';
-requireAuth();
-requireRole('Customer');
 
 $pageTitle = "Shopping Cart - Aunt Joy's Restaurant";
 $customCSS = "customer.css";
@@ -183,6 +181,9 @@ let discountAmount = 0;
 
 // Load cart on page load
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize cart count for guests
+    updateCartCount();
+    
     renderCart();
     updateSummary();
     
@@ -397,6 +398,15 @@ async function checkout() {
     const address = document.getElementById('deliveryAddress').value.trim();
     const phone = document.getElementById('contactNumber').value.trim();
     const instructions = document.getElementById('specialInstructions').value.trim();
+    
+    // Check if user is logged in before placing order
+    if (!window.AUNT_JOY?.isLoggedIn) {
+        showNotification('Please log in to place an order', 'warning');
+        setTimeout(() => {
+            window.location.href = '/aunt_joy/views/auth/login.php?next=cart';
+        }, 900);
+        return;
+    }
     
     if (!address) {
         showNotification('Please enter your delivery address', 'warning');

@@ -902,3 +902,356 @@ html[data-theme='dark'] .hero-visual {
     }
 }
 
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.7);
+    z-index: 9999;
+    backdrop-filter: blur(8px);
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: rgba(30, 58, 138, 0.25);
+    border: 1.5px solid rgba(100, 150, 255, 0.3);
+    border-radius: 25px;
+    padding: 3rem 2.5rem;
+    max-width: 420px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 25px 80px rgba(0, 20, 60, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    animation: slideUp 0.3s ease;
+    backdrop-filter: blur(15px);
+    color: var(--text);
+}
+
+.modal-content.modal-auth {
+    padding: 2.5rem 2rem;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--orange)
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    transition: all 0.2s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.modal-close:hover {
+    color: rgba(255, 255, 255, 1);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.auth-logo {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-logo .logo-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.auth-logo h2 {
+    font-size: 1.8rem;
+    margin: 0.5rem 0;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 700;
+}
+
+.auth-logo p {
+    color: var(--orange-dark2);
+    margin: 0.5rem 0 0 0;
+    font-size: 0.95rem;
+}
+
+/* Modal Form Styling */
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.modal-content .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.modal-content .form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modal-content .form-group label .label-icon {
+    font-size: 1.1rem;
+    opacity: 0.7;
+}
+
+.modal-content .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.modal-content .input-icon {
+    position: absolute;
+    right: 1rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.modal-content .input-wrapper:hover .input-icon {
+    opacity: 0.8;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="email"],
+.modal-content input[type="password"],
+.modal-content input[type="tel"] {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    padding-right: 2.8rem;
+    border: 1.5px solid rgba(100, 150, 255, 0.25);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.95);
+    transition: all 0.3s ease;
+    font-family: inherit;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content input[type="text"]::placeholder,
+.modal-content input[type="email"]::placeholder,
+.modal-content input[type="password"]::placeholder,
+.modal-content input[type="tel"]::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.modal-content input[type="text"]:focus,
+.modal-content input[type="email"]:focus,
+.modal-content input[type="password"]:focus,
+.modal-content input[type="tel"]:focus {
+    outline: none;
+    border-color: rgba(100, 200, 255, 0.6);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(100, 150, 255, 0.2);
+}
+
+.modal-content .form-hint {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 0.3rem;
+    display: block;
+}
+
+.modal-content .form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    margin: 0.5rem 0;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.modal-content .remember-me {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    user-select: none;
+}
+
+.modal-content .remember-me input[type="checkbox"] {
+    cursor: pointer;
+    accent-color: rgba(100, 200, 255, 0.8);
+    width: 18px;
+    height: 18px;
+}
+
+.modal-content .forgot-password {
+    color: rgba(100, 200, 255, 0.9);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.modal-content .forgot-password:hover {
+    color: rgba(150, 220, 255, 1);
+}
+
+.modal-content .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+}
+
+.modal-content .divider::before,
+.modal-content .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(100, 150, 255, 0.2);
+}
+
+.modal-content .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1.5px solid rgba(100, 150, 255, 0.3);
+    font-weight: 600;
+}
+
+.modal-content .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(100, 200, 255, 0.5);
+}
+
+.modal-content .btn-block {
+    width: 100%;
+    padding: 0.95rem 1.5rem;
+    font-weight: 600;
+    border-radius: 12px;
+    margin: 0;
+}
+
+.modal-content .form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.modal-content .form-actions .btn {
+    width: 100%;
+    padding: 0.95rem 1.5rem;
+    font-weight: 600;
+    border-radius: 12px;
+}
+
+.modal-content .btn-primary {
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    color: white;
+    box-shadow: 0 10px 25px rgba(255, 107, 53, 0.25);
+}
+
+.modal-content .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(255, 107, 53, 0.35);
+}
+
+.modal-content .form-footer {
+    text-align: center;
+    margin-top: 1.2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(100, 150, 255, 0.2);
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.modal-content .form-footer a {
+    color: rgba(100, 200, 255, 0.9);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.modal-content .form-footer a:hover {
+    color: rgba(150, 220, 255, 1);
+}
+
+.modal-content .alert {
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    animation: slideUp 0.3s ease;
+}
+
+.modal-content .alert-error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.modal-content .alert-success {
+    background: rgba(34, 197, 94, 0.1);
+    color: #86efac;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Scrollbar styling for modal */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: var(--muted);
+}
+

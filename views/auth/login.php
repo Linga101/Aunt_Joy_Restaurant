@@ -22,11 +22,11 @@ if (isLoggedIn()) {
 ?>
 
 <div class="auth-container">
-    <!-- Background Shapes -->
-    <div class="bg-shapes">
-        <div class="bg-shape bg-shape1"></div>
-        <div class="bg-shape bg-shape2"></div>
-        <div class="bg-shape bg-shape3"></div>
+    <!-- Background Shapes (matching welcome page) -->
+    <div class="hero-sculpture">
+        <div class="hero-orb orb-one"></div>
+        <div class="hero-orb orb-two"></div>
+        <div class="hero-wave"></div>
     </div>
 
     <!-- Back to Home -->

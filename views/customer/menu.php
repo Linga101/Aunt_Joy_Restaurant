@@ -20,7 +20,7 @@ $isCustomer = isLoggedIn() && getCurrentUserRole() === 'Customer';
                     id="menuCartButton"
                     class="cart-button"
                     data-target="/aunt_joy/views/customer/cart.php"
-                    data-locked="<?php echo $isCustomer ? 'false' : 'true'; ?>"
+                    data-locked="false"
                     data-auth-message="Login to manage your cart."
                     data-redirect="/aunt_joy/views/auth/login.php?next=cart"
                 >

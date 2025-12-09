@@ -380,7 +380,7 @@ function applyTheme(theme) {
     const toggle = document.getElementById('themeToggle');
     if (toggle) {
         toggle.dataset.theme = normalized;
-        toggle.innerHTML = normalized === 'dark' ? '<span class="theme-icon">☀️</span>' : '<span class="theme-icon">🌙</span>';
+        toggle.innerHTML = normalized === 'dark' ? '<span class="theme-icon"><img src="/aunt_joy/assets/images/icons/summer_15069875.png" alt="Sun icon"></span>' : '<span class="theme-icon"><img src="/aunt_joy/assets/images/icons/moon_16740252.png" alt="Moon icon"></span>';
         toggle.setAttribute('aria-label', normalized === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
     }
 }

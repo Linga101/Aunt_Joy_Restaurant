@@ -1,7 +1,5 @@
 <?php
 require_once __DIR__ . '/../../config/db.php';
-requireAuth();
-requireRole('Customer');
 
 $pageTitle = "My Orders - Aunt Joy's Restaurant";
 $customCSS = "customer.css";
@@ -88,8 +86,16 @@ include '../templates/header.php';
 let allOrders = [];
 let currentFilter = 'all';
 
-// Load orders on page load
+// Check if user is logged in on page load
 document.addEventListener('DOMContentLoaded', function() {
+    if (!window.AUNT_JOY?.isLoggedIn) {
+        showNotification('Please log in to view your orders', 'warning');
+        setTimeout(() => {
+            window.location.href = '/aunt_joy/views/auth/login.php?next=orders';
+        }, 900);
+        return;
+    }
+    
     loadOrders();
     
     // Auto-refresh every 15 seconds to show status updates
