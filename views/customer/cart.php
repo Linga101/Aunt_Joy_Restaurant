@@ -102,7 +102,6 @@ include '../templates/header.php';
                         <p class="promo-hint">Try: WELCOME10, SAVE500, or FIRSTORDER</p>
                     </div>
                 </div>
-
                 <!-- Delivery Details Card -->
                 <div class="delivery-card">
                     <h3 class="card-title">Delivery Information</h3>
@@ -401,10 +400,11 @@ async function checkout() {
     
     // Check if user is logged in before placing order
     if (!window.AUNT_JOY?.isLoggedIn) {
-        showNotification('Please log in to place an order', 'warning');
+        showNotification('Please log in to place an order', 'info');
+        // Use modal authentication instead of redirecting
         setTimeout(() => {
-            window.location.href = '/aunt_joy/views/auth/login.php?next=cart';
-        }, 900);
+            openAuthModal('login');
+        }, 300);
         return;
     }
     

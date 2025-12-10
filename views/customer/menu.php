@@ -22,7 +22,6 @@ $isCustomer = isLoggedIn() && getCurrentUserRole() === 'Customer';
                     data-target="/aunt_joy/views/customer/cart.php"
                     data-locked="false"
                     data-auth-message="Login to manage your cart."
-                    data-redirect="/aunt_joy/views/auth/login.php?next=cart"
                 >
                     🛒 Cart (<span id="cartCount">0</span>)
                 </button>
@@ -299,11 +298,10 @@ function guardMenuCartButton() {
     if (!cartButton) return;
     cartButton.addEventListener('click', () => {
         const requiresAuth = cartButton.dataset.locked === 'true';
-        const redirect = cartButton.dataset.redirect || '/aunt_joy/views/auth/login.php';
         const target = cartButton.dataset.target || '/aunt_joy/views/customer/cart.php';
         if (requiresAuth) {
             showNotification(cartButton.dataset.authMessage || 'Login to manage your cart.', 'info');
-            setTimeout(() => window.location.href = redirect, 900);
+            setTimeout(() => openAuthModal('login'), 300);
             return;
         }
         window.location.href = target;

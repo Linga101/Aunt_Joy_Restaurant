@@ -9,10 +9,10 @@ function hasCartAccess(showPrompt = false) {
         const role = window.AUNT_JOY?.role;
         const allowed = Boolean(loggedIn && role === 'Customer');
         if (!allowed) {
-            showNotification('Please log in as a customer to use the cart.', 'warning');
+            showNotification('Please log in as a customer to use the cart.', 'info');
             setTimeout(() => {
-                window.location.href = '/aunt_joy/views/auth/login.php?next=menu';
-            }, 900);
+                openAuthModal('login');
+            }, 300);
         }
         return allowed;
     }

@@ -89,10 +89,10 @@ let currentFilter = 'all';
 // Check if user is logged in on page load
 document.addEventListener('DOMContentLoaded', function() {
     if (!window.AUNT_JOY?.isLoggedIn) {
-        showNotification('Please log in to view your orders', 'warning');
+        showNotification('Please log in to view your orders', 'info');
         setTimeout(() => {
-            window.location.href = '/aunt_joy/views/auth/login.php?next=orders';
-        }, 900);
+            openAuthModal('login');
+        }, 300);
         return;
     }
     

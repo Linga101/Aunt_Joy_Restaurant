@@ -4,12 +4,13 @@ $customCSS = "auth.css";
 $customJS = "auth.js";
 $showNav = false;
 $showFooter = false;
-$bodyClass = "auth-page";
+$isModal = !empty($_GET['modal']) || (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'index.php') !== false);
+$bodyClass = "auth-page" . ($isModal ? " auth-modal-page" : "");
 
 include '../templates/header.php';
 
-// Redirect if already logged in
-if (isLoggedIn()) {
+// Redirect if already logged in (only if not in modal)
+if (isLoggedIn() && !$isModal) {
     redirect('/aunt_joy/views/customer/menu.php');
 }
 ?>
@@ -46,7 +47,6 @@ if (isLoggedIn()) {
         <form id="registerForm" class="auth-form">
             <!-- Full Name -->
             <div class="form-group">
-                <label for="full_name">Full Name *</label>
                 <div class="input-wrapper">
                     <input 
                         type="text" 
@@ -62,7 +62,6 @@ if (isLoggedIn()) {
 
             <!-- Username -->
             <div class="form-group">
-                <label for="username">Username *</label>
                 <div class="input-wrapper">
                     <input 
                         type="text" 
@@ -80,7 +79,6 @@ if (isLoggedIn()) {
 
             <!-- Email -->
             <div class="form-group">
-                <label for="email">Email Address *</label>
                 <div class="input-wrapper">
                     <input 
                         type="email" 
@@ -96,7 +94,6 @@ if (isLoggedIn()) {
 
             <!-- Phone Number -->
             <div class="form-group">
-                <label for="phone_number">Phone Number</label>
                 <div class="input-wrapper">
                     <input 
                         type="tel" 
@@ -111,7 +108,6 @@ if (isLoggedIn()) {
 
             <!-- Password -->
             <div class="form-group">
-                <label for="password">Password *</label>
                 <div class="input-wrapper">
                     <input 
                         type="password" 
@@ -129,7 +125,6 @@ if (isLoggedIn()) {
 
             <!-- Confirm Password -->
             <div class="form-group">
-                <label for="confirm_password">Confirm Password *</label>
                 <div class="input-wrapper">
                     <input 
                         type="password" 

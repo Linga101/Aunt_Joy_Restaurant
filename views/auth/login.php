@@ -4,12 +4,13 @@ $customCSS = "auth.css";
 $customJS = "auth.js";
 $showNav = false;
 $showFooter = false;
-$bodyClass = "auth-page";
+$isModal = !empty($_GET['modal']) || (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'index.php') !== false);
+$bodyClass = "auth-page" . ($isModal ? " auth-modal-page" : "");
 
 include '../templates/header.php';
 
-// Redirect if already logged in
-if (isLoggedIn()) {
+// Redirect if already logged in (only if not in modal)
+if (isLoggedIn() && !$isModal) {
     $role = getCurrentUserRole();
     $redirects = [
         'Customer' => '/aunt_joy/views/customer/menu.php',
@@ -63,7 +64,6 @@ if (isLoggedIn()) {
         <form id="loginForm" class="auth-form">
             <!-- Username -->
             <div class="form-group">
-                <label for="username">Username or Email</label>
                 <div class="input-wrapper">
                     <input 
                         type="text" 
@@ -79,7 +79,6 @@ if (isLoggedIn()) {
 
             <!-- Password -->
             <div class="form-group">
-                <label for="password">Password</label>
                 <div class="input-wrapper">
                     <input 
                         type="password" 

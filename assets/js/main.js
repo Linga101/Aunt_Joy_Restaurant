@@ -415,11 +415,10 @@ function initNavGuards() {
         element.addEventListener('click', event => {
             event.preventDefault();
             const message = element.dataset.authMessage || 'Please log in to continue.';
-            const redirectTarget = element.dataset.redirect || '/aunt_joy/views/auth/login.php';
             showNotification(message, 'info');
             setTimeout(() => {
-                window.location.href = redirectTarget;
-            }, 900);
+                openAuthModal('login');
+            }, 300);
         });
     });
 }
@@ -593,3 +592,172 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+/**
+ * Open Auth Modal
+ * @param {'login'|'register'} authType
+ */
+function openAuthModal(authType = 'login') {
+    const modal = document.getElementById('authModal');
+    const modalBody = document.getElementById('authModalBody');
+    
+    if (!modal) return;
+    
+    // Show loading state
+    modalBody.innerHTML = '<div style="text-align:center; padding:2rem;"><p>Loading...</p></div>';
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Load auth form via AJAX
+    const url = authType === 'login' 
+        ? '/aunt_joy/views/auth/login-modal.php' 
+        : '/aunt_joy/views/auth/register-modal.php';
+    
+    fetch(url)
+        .then(response => response.text())
+        .then(html => {
+            modalBody.innerHTML = html;
+            // Re-attach event listeners for new form
+            initAuthForms();
+            // Enhance scroll sensitivity
+            enhanceModalScrolling();
+        })
+        .catch(error => {
+            console.error('Error loading auth form:', error);
+            modalBody.innerHTML = '<div style="text-align:center; padding:2rem; color:red;">Error loading form. Please try again.</div>';
+        });
+}
+
+/**
+ * Switch between login and register in modal
+ * @param {'login'|'register'} authType
+ */
+function switchAuthModal(authType = 'login') {
+    openAuthModal(authType);
+}
+
+/**
+ * Close Auth Modal
+ */
+function closeAuthModal() {
+    const modal = document.getElementById('authModal');
+    if (!modal) return;
+    
+    modal.classList.remove('active');
+    document.getElementById('authModalBody').innerHTML = '';
+    document.body.style.overflow = 'auto';
+}
+
+/**
+ * Enhance scroll sensitivity for modal
+ */
+function enhanceModalScrolling() {
+    const modalContent = document.querySelector('.auth-modal .modal-content');
+    if (!modalContent) return;
+    
+    modalContent.addEventListener('wheel', function(e) {
+        // Increase scroll sensitivity significantly (3x faster)
+        const scrollAmount = e.deltaY > 0 ? 80 : -80;
+        this.scrollTop += scrollAmount;
+    }, { passive: true });
+}
+
+// Initialize event listeners for auth forms
+function initAuthForms() {
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitLoginForm();
+        });
+    }
+    
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitRegisterForm();
+        });
+    }
+}
+
+/**
+ * Submit login form
+ */
+async function submitLoginForm() {
+    const form = document.getElementById('loginForm');
+    const username = form.username.value;
+    const password = form.password.value;
+    const remember = form.remember.checked;
+    
+    try {
+        const response = await fetch('/aunt_joy/controllers/auth/login.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&remember=${remember ? '1' : '0'}`
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('Login successful!', 'success');
+            setTimeout(() => {
+                window.location.href = data.redirect || '/aunt_joy/index.php';
+            }, 1000);
+        } else {
+            showNotification(data.message || 'Login failed', 'error');
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        showNotification('An error occurred. Please try again.', 'error');
+    }
+}
+
+/**
+ * Submit register form
+ */
+async function submitRegisterForm() {
+    const form = document.getElementById('registerForm');
+    const formData = new FormData(form);
+    
+    try {
+        const response = await fetch('/aunt_joy/controllers/auth/register.php', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('Account created successfully! Please log in.', 'success');
+            setTimeout(() => {
+                switchAuthModal('login');
+            }, 1500);
+        } else {
+            showNotification(data.message || 'Registration failed', 'error');
+        }
+    } catch (error) {
+        console.error('Register error:', error);
+        showNotification('An error occurred. Please try again.', 'error');
+    }
+}
+
+// Close modal on backdrop click
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('authModal');
+    const backdrop = document.querySelector('.modal-backdrop');
+    
+    if (backdrop) {
+        backdrop.addEventListener('click', closeAuthModal);
+    }
+    
+    // Close modal on ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeAuthModal();
+        }
+    });
+});
