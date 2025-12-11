@@ -4,6 +4,11 @@
  * Different menu items based on user role
  */
 
+// Ensure database config is loaded
+if (!function_exists('getCurrentUserRole')) {
+    require_once __DIR__ . '/../../config/db.php';
+}
+
 $userRole = getCurrentUserRole();
 ?>
 
