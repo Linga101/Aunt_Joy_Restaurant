@@ -37,21 +37,6 @@ if (isLoggedIn()) {
         </div>
     </div>
 
-    <!-- Username -->
-    <div class="form-group">
-        <div class="input-wrapper">
-            <input 
-                type="text" 
-                id="username" 
-                name="username" 
-                placeholder="Username"
-                required
-                autocomplete="username"
-                minlength="3"
-            >
-        </div>
-    </div>
-
     <!-- Email -->
     <div class="form-group">
         <div class="input-wrapper">
