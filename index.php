@@ -59,7 +59,6 @@ include __DIR__ . '/views/templates/header.php';
         </p>
         <div class="cta-buttons">
             <a href="/aunt_joy/views/customer/menu.php" class="btn btn-primary">Order Now</a>
-            <a href="/aunt_joy/views/auth/login.php" class="btn btn-secondary">User Login</a>
         </div>
         <div class="hero-highlight">
             <span>🍲 120+ menu items</span>
@@ -206,10 +205,348 @@ include __DIR__ . '/views/templates/header.php';
         </ul>
         <div class="contact-actions">
             <a href="tel:+265999123456" class="btn btn-primary">Call Now</a>
-            <a href="/aunt_joy/views/auth/register.php" class="btn btn-secondary">Partner with us</a>
+            <button onclick="openRegisterModal()" class="btn btn-secondary">Partner with us</button>
         </div>
     </div>
 </section>
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+    <div class="modal-content modal-auth">
+        <span class="modal-close" onclick="closeLoginModal()">&times;</span>
+        <div class="auth-logo">
+            <div class="logo-icon">🍽️</div>
+            <h2>Welcome Back</h2>
+            <p>Sign in to continue to Aunt Joy's</p>
+        </div>
+        
+        <div id="loginAlertContainer"></div>
+        
+        <form id="loginForm" class="auth-form">
+            <div class="form-group">
+                <label for="login-username">Username or Email</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="login-username" 
+                        name="username" 
+                        placeholder="Enter your username or email"
+                        required
+                        autocomplete="username"
+                    >
+                    <span class="input-icon">👤</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="password" 
+                        id="login-password" 
+                        name="password" 
+                        placeholder="Enter your password"
+                        required
+                        autocomplete="current-password"
+                    >
+                    <span class="input-icon password-toggle" onclick="togglePassword('login-password')">👁️</span>
+                </div>
+            </div>
+
+            <div class="form-options">
+                <label class="remember-me">
+                    <input type="checkbox" name="remember">
+                    <span>Remember me</span>
+                </label>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+
+            <div class="divider"><span>Don't have an account?</span></div>
+
+            <button type="button" onclick="switchToRegisterModal()" class="btn btn-secondary btn-block">
+                Create Account
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Register Modal -->
+<div id="registerModal" class="modal">
+    <div class="modal-content modal-auth">
+        <span class="modal-close" onclick="closeRegisterModal()">&times;</span>
+        <div class="auth-logo">
+            <div class="logo-icon">🍽️</div>
+            <h2>Create Account</h2>
+            <p>Join Aunt Joy's Restaurant today</p>
+        </div>
+        
+        <div id="registerAlertContainer"></div>
+        
+        <form id="registerForm" class="auth-form">
+            <div class="form-group">
+                <label for="register-full_name">Full Name</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="register-full_name" 
+                        name="full_name" 
+                        placeholder="Enter your full name"
+                        required
+                        autocomplete="name"
+                    >
+                    <span class="input-icon">👤</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="register-username">Username</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="register-username" 
+                        name="username" 
+                        placeholder="Choose a username"
+                        required
+                        autocomplete="username"
+                        minlength="3"
+                    >
+                    <span class="input-icon">@</span>
+                </div>
+                <small class="form-hint">At least 3 characters</small>
+            </div>
+
+            <div class="form-group">
+                <label for="register-email">Email Address</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="email" 
+                        id="register-email" 
+                        name="email" 
+                        placeholder="Enter your email"
+                        required
+                        autocomplete="email"
+                    >
+                    <span class="input-icon">✉️</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="register-phone">Phone Number</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="tel" 
+                        id="register-phone" 
+                        name="phone_number" 
+                        placeholder="+265 999 123 456"
+                        autocomplete="tel"
+                    >
+                    <span class="input-icon">📞</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="register-password">Password</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="password" 
+                        id="register-password" 
+                        name="password" 
+                        placeholder="Create a password"
+                        required
+                        autocomplete="new-password"
+                        minlength="6"
+                    >
+                    <span class="input-icon password-toggle" onclick="togglePassword('register-password')">👁️</span>
+                </div>
+                <small class="form-hint">At least 6 characters</small>
+            </div>
+
+            <div class="form-group">
+                <label for="register-confirm">Confirm Password</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="password" 
+                        id="register-confirm" 
+                        name="confirm_password" 
+                        placeholder="Confirm your password"
+                        required
+                        autocomplete="new-password"
+                    >
+                    <span class="input-icon password-toggle" onclick="togglePassword('register-confirm')">👁️</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="terms" required>
+                    <span>I agree to the <a href="#">Terms & Conditions</a></span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+
+            <div class="divider"><span>Already have an account?</span></div>
+
+            <button type="button" onclick="switchToLoginModal()" class="btn btn-secondary btn-block">
+                Sign In
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+// Modal functions for login and register
+function openLoginModal() {
+    document.getElementById('loginModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLoginModal() {
+    document.getElementById('loginModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+    // Clear form on close
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) loginForm.reset();
+    const alertContainer = document.getElementById('loginAlertContainer');
+    if (alertContainer) alertContainer.innerHTML = '';
+}
+
+function openRegisterModal() {
+    document.getElementById('registerModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeRegisterModal() {
+    document.getElementById('registerModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+    // Clear form on close
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) registerForm.reset();
+    const alertContainer = document.getElementById('registerAlertContainer');
+    if (alertContainer) alertContainer.innerHTML = '';
+}
+
+function switchToLoginModal() {
+    closeRegisterModal();
+    openLoginModal();
+}
+
+function switchToRegisterModal() {
+    closeLoginModal();
+    openRegisterModal();
+}
+
+// Handle login form
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const alertContainer = document.getElementById('loginAlertContainer');
+            
+            const payload = {
+                username: document.getElementById('login-username').value.trim(),
+                password: document.getElementById('login-password').value,
+            };
+
+            try {
+                showLoading(submitBtn);
+                const result = await apiCall('auth/login.php', 'POST', payload);
+                
+                // Show success message in modal
+                if (alertContainer) {
+                    alertContainer.innerHTML = `<div class="alert alert-success">${result.message || 'Login successful'}</div>`;
+                }
+                showNotification(result.message || 'Login successful', 'success');
+
+                const userRole = result.data?.role_name;
+                const redirects = {
+                    Customer: '/aunt_joy/views/customer/menu.php',
+                    Administrator: '/aunt_joy/views/admin/dashboard.php',
+                    'Sales Personnel': '/aunt_joy/views/sales/dashboard.php',
+                    Manager: '/aunt_joy/views/manager/dashboard.php',
+                };
+
+                setTimeout(() => {
+                    window.location.href = redirects[userRole] || '/aunt_joy/index.php';
+                }, 500);
+            } catch (error) {
+                // Show error message in modal
+                if (alertContainer) {
+                    alertContainer.innerHTML = `<div class="alert alert-error">${error.message || 'Login failed'}</div>`;
+                }
+                showNotification(error.message || 'Login failed', 'error');
+            } finally {
+                hideLoading(submitBtn);
+            }
+        });
+    }
+
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const alertContainer = document.getElementById('registerAlertContainer');
+            
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm').value;
+
+            if (password !== confirmPassword) {
+                if (alertContainer) {
+                    alertContainer.innerHTML = `<div class="alert alert-error">Passwords do not match.</div>`;
+                }
+                showNotification('Passwords do not match.', 'error');
+                return;
+            }
+
+            const payload = {
+                full_name: document.getElementById('register-full_name').value.trim(),
+                username: document.getElementById('register-username').value.trim(),
+                email: document.getElementById('register-email').value.trim(),
+                phone_number: document.getElementById('register-phone').value.trim(),
+                password,
+            };
+
+            try {
+                showLoading(submitBtn);
+                const result = await apiCall('auth/register.php', 'POST', payload);
+                
+                if (alertContainer) {
+                    alertContainer.innerHTML = `<div class="alert alert-success">${result.message || 'Registration successful'}</div>`;
+                }
+                showNotification(result.message || 'Registration successful', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = '/aunt_joy/views/customer/menu.php';
+                }, 600);
+            } catch (error) {
+                if (alertContainer) {
+                    alertContainer.innerHTML = `<div class="alert alert-error">${error.message || 'Registration failed'}</div>`;
+                }
+                showNotification(error.message || 'Registration failed', 'error');
+            } finally {
+                hideLoading(submitBtn);
+            }
+        });
+    }
+});
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const loginModal = document.getElementById('loginModal');
+    const registerModal = document.getElementById('registerModal');
+    if (event.target === loginModal) {
+        closeLoginModal();
+    }
+    if (event.target === registerModal) {
+        closeRegisterModal();
+    }
+}
+</script>
 
 <?php include __DIR__ . '/views/templates/footer.php'; ?>
 
