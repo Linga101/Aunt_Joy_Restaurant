@@ -312,7 +312,7 @@ body.dashboard-page {
         transform: translateY(20px);
     }
     to {
-        opacity: 0;
+        opacity: 1;
         transform: translateY(0);
     }
 }
@@ -450,6 +450,9 @@ body.dashboard-page {
     text-align: left;
     transition: all 0.2s ease;
     pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .action-card:disabled {
@@ -466,6 +469,26 @@ body.dashboard-page {
 
 .action-card:not(:disabled):active {
     transform: translateY(-2px);
+}
+
+.action-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.action-card h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.action-card p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
 }
 
 /* Quick Add Buttons */
@@ -912,4 +935,46 @@ body.dashboard-page {
         transform: rotate(360deg);
     }
 }
+
+/* Table Actions Column */
+.table td.actions {
+    text-align: center;
+    white-space: nowrap;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.table .btn-icon {
+    padding: 0.4rem 0.6rem;
+    min-width: 32px;
+    min-height: 32px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.table .btn-icon.btn-secondary {
+    background-color: #e2e8f0;
+    color: #334155;
+}
+
+.table .btn-icon.btn-secondary:hover {
+    background-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+.table .btn-icon.btn-danger {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.table .btn-icon.btn-danger:hover {
+    background-color: #fecaca;
+    transform: translateY(-1px);
+}
+
 

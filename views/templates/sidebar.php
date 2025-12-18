@@ -4,6 +4,11 @@
  * Different menu items based on user role
  */
 
+// Ensure database config is loaded
+if (!function_exists('getCurrentUserRole')) {
+    require_once __DIR__ . '/../../config/db.php';
+}
+
 $userRole = getCurrentUserRole();
 ?>
 
@@ -21,8 +26,9 @@ $userRole = getCurrentUserRole();
     
     <!-- Navigation Menu -->
     <nav class="sidebar-nav">
+        <!-- DEBUG: Role is <?php echo htmlspecialchars($userRole ?? 'NULL'); ?> -->
         <ul class="nav-list">
-            <?php if($userRole === 'Customer'): ?>
+                <?php if(hasRole('Customer')): ?>
                 <!-- Customer Menu -->
                 <li class="nav-item">
                     <a href="/aunt_joy/views/customer/menu.php" class="nav-link">
@@ -49,7 +55,7 @@ $userRole = getCurrentUserRole();
                     </a>
                 </li>
                 
-            <?php elseif($userRole === 'Administrator'): ?>
+            <?php elseif(hasRole('Administrator')): ?>
                 <!-- Admin Menu -->
                 <li class="nav-item">
                     <a href="/aunt_joy/views/admin/dashboard.php" class="nav-link">
@@ -76,7 +82,7 @@ $userRole = getCurrentUserRole();
                     </a>
                 </li>
                 
-            <?php elseif($userRole === 'Sales Personnel'): ?>
+            <?php elseif(hasRole('Sales Personnel')): ?>
                 <!-- Sales Menu -->
                 <li class="nav-item">
                     <a href="/aunt_joy/views/sales/dashboard.php" class="nav-link">
@@ -91,7 +97,7 @@ $userRole = getCurrentUserRole();
                     </a>
                 </li>
                 
-            <?php elseif($userRole === 'Manager'): ?>
+            <?php elseif(hasRole('Manager')): ?>
                 <!-- Manager Menu -->
                 <li class="nav-item">
                     <a href="/aunt_joy/views/manager/dashboard.php" class="nav-link">
@@ -105,6 +111,16 @@ $userRole = getCurrentUserRole();
                         <span>Profile</span>
                     </a>
                 </li>
+            <?php endif; ?>
+            
+            <!-- Categories Management - Always show for Admins -->
+                <?php if(hasRole('Administrator') || hasRole('Manager')): ?>
+            <li class="nav-item">
+                <a href="/aunt_joy/views/admin/categories.php" class="nav-link">
+                    <span class="nav-icon">📂</span>
+                    <span>Categories Management</span>
+                </a>
+            </li>
             <?php endif; ?>
             
             <!-- Logout (All Users) -->

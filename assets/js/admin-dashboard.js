@@ -1,6 +1,6 @@
 /**
- * Admin + back office interactions (dashboard widgets, meals CRUD).
- * Relies on helper utilities defined in assets/js/main.js (apiCall, debounce, etc.)
+ * Admin Dashboard - Category Management
+ * Complete CRUD implementation for meal categories
  */
 
 const adminState = {
@@ -9,306 +9,63 @@ const adminState = {
     users: [],
 };
 
-// Wrapper functions to safely call async functions from onclick handlers
-// These are synchronous wrappers that don't block the UI
-function openDashboardMealModal(mealId = null) {
-    console.log("openDashboardMealModal called with mealId:", mealId);
-    
-    const modal = document.getElementById("dashboardMealModal");
-    const form = document.getElementById("dashboardMealForm");
-    
-    if (!modal || !form) {
-        showNotification("Error: Modal elements not found on page", "error");
-        return;
-    }
+// Debug: indicate the admin-dashboard script file was loaded
+console.log('admin-dashboard.js loaded');
 
-    // Reset form and show modal
-    form.reset();
-    document.getElementById("dashboardMealId").value = "";
-    resetDashboardMealImageInputs("");
-    
-    if (mealId) {
-        document.getElementById("dashboardMealModalTitle").textContent = "Edit Meal";
-        
-        // Load meal data if available
-        if (adminState.meals && adminState.meals.length > 0) {
-            const meal = adminState.meals.find(m => m.meal_id == mealId);
-            if (meal) {
-                document.getElementById("dashboardMealId").value = meal.meal_id;
-                document.getElementById("dashboardMealName").value = meal.meal_name;
-                document.getElementById("dashboardMealCategory").value = meal.category_id;
-                document.getElementById("dashboardMealDescription").value = meal.meal_description;
-                document.getElementById("dashboardMealPrice").value = meal.price;
-                document.getElementById("dashboardMealPrepTime").value = meal.preparation_time || 20;
-                document.getElementById("dashboardIsAvailable").checked = !!meal.is_available;
-                document.getElementById("dashboardIsFeatured").checked = !!meal.is_featured;
-                resetDashboardMealImageInputs(meal.image_url || "");
-            }
-        }
-    } else {
-        document.getElementById("dashboardMealModalTitle").textContent = "Add New Meal";
-    }
-    
-    // Show modal
-    modal.classList.add("active");
-    console.log("Modal displayed");
-}
+// =========================================================================
+// INITIALIZATION
+// =========================================================================
 
-// Expose all functions to window immediately for onclick handlers
-function setupWindowFunctions() {
-    window.initAdminDashboard = initAdminDashboard;
-    window.loadAdminStats = loadAdminStats;
-    window.loadRecentOrders = loadRecentOrders;
-    window.initMealManagement = initMealManagement;
-    window.loadMealCategories = loadMealCategories;
-    window.loadMeals = loadMeals;
-    window.renderMeals = renderMeals;
-    window.updateMealStats = updateMealStats;
-    window.filterMeals = filterMeals;
-    window.openMealModal = openMealModal;
-    window.closeMealModal = closeMealModal;
-    window.submitMealForm = submitMealForm;
-    window.deleteMeal = deleteMeal;
-    window.handleMealImageChange = handleMealImageChange;
-    window.resetMealImageInputs = resetMealImageInputs;
-    window.setExistingMealImage = setExistingMealImage;
-    window.renderMealImagePreview = renderMealImagePreview;
-    window.setText = setText;
-    window.initUserManagement = initUserManagement;
-    window.loadUsers = loadUsers;
-    window.renderUsers = renderUsers;
-    window.openUserModal = openUserModal;
-    window.closeUserModal = closeUserModal;
-    window.editUser = editUser;
-    window.submitUserForm = submitUserForm;
-    window.deleteUser = deleteUser;
-    window.filterByRole = filterByRole;
-    window.filterUsers = filterUsers;
-    window.escapeHtml = escapeHtml;
-    // Dashboard meal modal functions
-    window.openDashboardMealModal = openDashboardMealModal;
-    window.closeDashboardMealModal = closeDashboardMealModal;
-    window.submitDashboardMealForm = submitDashboardMealForm;
-    window.handleDashboardMealImageChange = handleDashboardMealImageChange;
-    window.resetDashboardMealImageInputs = resetDashboardMealImageInputs;
-    window.renderDashboardMealImagePreview = renderDashboardMealImagePreview;
-    window.loadDashboardMealCategories = loadDashboardMealCategories;
-    // Dashboard user modal functions
-    window.openDashboardUserModal = openDashboardUserModal;
-    window.closeDashboardUserModal = closeDashboardUserModal;
-    window.submitDashboardUserForm = submitDashboardUserForm;
-    // Settings modals (coming soon)
-    window.openCategoriesModal = openCategoriesModal;
-    window.openSettingsModal = openSettingsModal;
-}
-
-// Call immediately to expose functions before DOM content loads
-function setupWindowFunctionsWithWrappers() {
-    setupWindowFunctions();
-}
-
-setupWindowFunctionsWithWrappers();
-
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("Admin Dashboard DOMContentLoaded");
-    
-    if (document.getElementById("recentOrders")) {
-        console.log("Initializing admin dashboard stats");
-        initAdminDashboard();
-    }
-
-    if (document.getElementById("mealModal")) {
-        console.log("Initializing meal management");
-        initMealManagement();
-    }
-
-    if (document.getElementById("userModal")) {
-        console.log("Initializing user management");
-        initUserManagement();
-    }
-
-    // Initialize dashboard modals
-    if (document.getElementById("dashboardMealModal")) {
-        console.log("Initializing dashboard meal modal");
-        initDashboardMealModal();
-    }
-
-    if (document.getElementById("dashboardUserModal")) {
-        console.log("Initializing dashboard user modal");
-        initDashboardUserModal();
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Admin Dashboard Loaded');
+    initializeDashboard();
 });
 
-async function initAdminDashboard() {
+async function initializeDashboard() {
     try {
-        await Promise.all([loadAdminStats(), loadRecentOrders()]);
-        
-        // Pre-load meals and categories for dashboard modals
-        await loadMeals();
-        await loadMealCategories();
+        // Load all data in parallel
+        await Promise.all([
+            loadStats(),
+            loadCategories(),
+            loadMeals(),
+            loadUsers()
+        ]);
+        console.log('Dashboard initialization complete');
     } catch (error) {
-        console.error("Failed to initialize admin dashboard:", error);
+        console.error('Dashboard initialization failed:', error);
+        showNotification('Failed to load dashboard data', 'error');
     }
 }
 
-async function loadAdminStats() {
+// =========================================================================
+// STATS LOADING
+// =========================================================================
+
+async function loadStats() {
     try {
-        console.log("loadAdminStats called");
-        const [mealsRes, usersRes, ordersRes] = await Promise.all([
-            apiCall("customer/get_meals.php?include_all=1"),
-            apiCall("admin/get_users.php"),
-            apiCall("sales/get_orders.php"),
+        const [meals, users, orders] = await Promise.all([
+            apiCall('customer/get_meals.php?include_all=1', 'GET'),
+            apiCall('admin/get_users.php', 'GET'),
+            apiCall('sales/get_orders.php', 'GET')
         ]);
 
-        console.log("Stats responses:", { mealsRes, usersRes, ordersRes });
-
-        const meals = (mealsRes && mealsRes.success && mealsRes.data) ? mealsRes.data : [];
-        const users = (usersRes && usersRes.success && usersRes.data) ? usersRes.data : [];
-        const orders = (ordersRes && ordersRes.success && ordersRes.data) ? ordersRes.data : [];
-
-        console.log("Parsed stats:", { meals: meals.length, users: users.length, orders: orders.length });
-
-        setText("totalMeals", meals.length);
-        setText("availableMeals", meals.filter((m) => m.is_available).length);
-        setText("totalUsers", users.length);
-        setText("totalOrders", orders.length);
-    } catch (error) {
-        console.error("Error loading admin stats:", error);
-        // Set default values on error
-        setText("totalMeals", "—");
-        setText("availableMeals", "—");
-        setText("totalUsers", "—");
-        setText("totalOrders", "—");
-    }
-}
-
-async function loadRecentOrders() {
-    const target = document.getElementById("recentOrders");
-    if (!target) return;
-
-    try {
-        const result = await apiCall("sales/get_orders.php?limit=5");
-        
-        console.log("Recent orders result:", result);
-        
-        if (!result || !result.success) {
-            target.innerHTML = '<p class="text-danger">Failed to load orders: ' + (result?.message || 'Unknown error') + '</p>';
-            return;
+        // Update stat cards
+        if (document.getElementById('totalMeals')) {
+            document.getElementById('totalMeals').textContent = meals.data?.length || 0;
+        }
+        if (document.getElementById('availableMeals')) {
+            document.getElementById('availableMeals').textContent = 
+                meals.data?.filter(m => m.is_available).length || 0;
+        }
+        if (document.getElementById('totalUsers')) {
+            document.getElementById('totalUsers').textContent = users.data?.length || 0;
+        }
+        if (document.getElementById('totalOrders')) {
+            document.getElementById('totalOrders').textContent = orders.data?.length || 0;
         }
 
-        const orders = result.data || [];
-
-        if (!orders.length) {
-            target.innerHTML = '<p class="text-muted">No recent orders</p>';
-            return;
-        }
-
-        target.innerHTML = `
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Order #</th>
-                        <th>Customer</th>
-                        <th>Date</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${orders
-                        .map(
-                            (order) => `
-                        <tr>
-                            <td><strong>${order.order_number}</strong></td>
-                            <td>${order.customer_name}</td>
-                    <td>${order.order_date ? formatDate(order.order_date) : '—'}</td>
-                            <td><strong>${order.total_amount_formatted || formatCurrency(order.total_amount)}</strong></td>
-                            <td>
-                                <span class="status-badge status-${(order.order_status || "")
-                                    .toLowerCase()
-                                    .replace(/ /g, "-")}">
-                                    ${order.order_status}
-                                </span>
-                            </td>
-                        </tr>
-                    `
-                        )
-                        .join("")}
-                </tbody>
-            </table>
-        `;
     } catch (error) {
-        console.error("Error loading recent orders:", error);
-        target.innerHTML = '<p class="text-danger">Error loading orders: ' + (error?.message || 'Unknown error') + '</p>';
-    }
-}
-
-/* --------------------------------------------------------------------------
-   Meal Management (admin/meals.php)
-   -------------------------------------------------------------------------- */
-function initMealManagement() {
-    try {
-        // Pre-load data for edit functionality
-        Promise.all([loadMealCategories(), loadMeals()]);
-    } catch (error) {
-        console.error("Failed to load meals data:", error);
-    }
-
-    const searchInput = document.getElementById("searchInput");
-    if (searchInput) {
-        searchInput.addEventListener(
-            "input",
-            debounce((event) => {
-                filterMeals(event.target.value);
-            }, 300)
-        );
-    }
-
-    // Form submission is handled by onsubmit attribute in HTML
-    // No need to add event listener here
-
-    const mealImageFileInput = document.getElementById("mealImageFile");
-    if (mealImageFileInput) {
-        mealImageFileInput.addEventListener("change", handleMealImageChange);
-    }
-
-    // Close modal when clicking outside
-    window.addEventListener("click", (event) => {
-        const modal = document.getElementById("mealModal");
-        if (event.target === modal) {
-            closeMealModal();
-        }
-    });
-}
-
-async function loadMealCategories() {
-    const select = document.getElementById("mealCategory");
-    if (!select) return;
-
-    select.innerHTML = '<option value="">Select category</option>';
-
-    try {
-        console.log("loadMealCategories called");
-        const response = await apiCall("customer/get_meals.php?categories=true");
-        console.log("Categories response:", response);
-        
-        if (response && response.success && response.data) {
-            adminState.categories = response.data;
-            console.log("Categories loaded:", adminState.categories.length);
-            
-            adminState.categories.forEach((cat) => {
-                const option = document.createElement("option");
-                option.value = cat.category_id;
-                option.textContent = cat.category_name;
-                select.appendChild(option);
-            });
-        } else {
-            console.error("Failed to load categories:", response?.message);
-            showNotification("Unable to load categories", "error");
-        }
-    } catch (error) {
-        console.error("Failed to load categories:", error);
-        showNotification("Unable to load categories: " + (error?.message || 'Network error'), "error");
+        console.error('Failed to load stats:', error);
     }
 }
 
@@ -543,7 +300,7 @@ async function deleteMeal(mealId, mealName) {
     try {
         const result = await apiCall("admin/delete_meal.php", "POST", { meal_id: mealId });
         showNotification(result.message || "Meal deleted", "success");
-        await loadMeals({ includeAll: true }); // Ensure all meals are reloaded, including unavailable ones
+        await loadMeals();
     } catch (error) {
         console.error("Failed to delete meal:", error);
         showNotification(error.message || "Failed to delete meal", "error");
@@ -974,6 +731,25 @@ function initDashboardUserModal() {
     console.log("Added click outside listener");
 }
 
+function initCategoryModal() {
+    console.log("initCategoryModal called");
+    const modal = document.getElementById("categoryModal");
+    
+    console.log("Modal element:", modal);
+
+    // Close modal when clicking outside
+    window.addEventListener("click", (event) => {
+        const modal = document.getElementById("categoryModal");
+        if (event.target === modal) {
+            closeCategoryModal();
+        }
+    });
+    console.log("Added click outside listener for category modal");
+    
+    // Load categories on init
+    loadCategories();
+}
+
 /* --------------------------------------------------------------------------
    Dashboard Meal Modal Functions
    -------------------------------------------------------------------------- */
@@ -1297,12 +1073,270 @@ function submitDashboardUserForm(event) {
 /* --------------------------------------------------------------------------
    Coming Soon Modals
    -------------------------------------------------------------------------- */
+// =========================================================================
+// CATEGORY MANAGEMENT
+// =========================================================================
 
-function openCategoriesModal() {
-    showNotification('Category management feature is coming in the next update!', 'info');
+async function loadCategories() {
+    try {
+        console.log('loadCategories() - requesting data from backend');
+        // Resolve and log the full URL used for the API call
+        try {
+            const resolved = resolveEndpoint('admin/get_categories.php');
+            console.log('Resolved get_categories endpoint:', resolved);
+        } catch (e) {
+            console.warn('Could not resolve endpoint:', e);
+        }
+
+        // Primary attempt: admin endpoint (requires role)
+        let result = null;
+        try {
+            result = await apiCall('admin/get_categories.php', 'GET');
+            console.log('loadCategories() - admin endpoint response:', result);
+        } catch (err) {
+            console.warn('loadCategories() - admin endpoint failed:', err.message || err);
+        }
+
+        // If admin endpoint didn't return usable data, fall back to public customer endpoint
+        if (!result || !result.success || !Array.isArray(result.data)) {
+            console.log('loadCategories() - falling back to customer/get_meals.php?categories=true');
+            try {
+                result = await apiCall('customer/get_meals.php?categories=true', 'GET');
+                console.log('loadCategories() - fallback response:', result);
+            } catch (err) {
+                console.error('loadCategories() - fallback failed:', err.message || err);
+            }
+        }
+
+        if (result && result.success) {
+            adminState.categories = result.data || [];
+            console.log(`loadCategories() - ${adminState.categories.length} categories loaded`);
+            renderCategories();
+        } else {
+            console.warn('loadCategories() - API error or no data returned');
+        }
+    } catch (error) {
+        console.error('loadCategories() - exception:', error);
+        showNotification('Failed to load categories', 'error');
+    }
 }
 
-function openSettingsModal() {
-    showNotification('System settings feature is coming in the next update!', 'info');
+function renderCategories() {
+    console.log('renderCategories() called');
+    const container = document.getElementById('categoriesTableBody');
+    
+    if (!container) {
+        console.warn('renderCategories() - container not found');
+        return;
+    }
+
+    if (adminState.categories.length === 0) {
+        console.log('renderCategories() - no categories');
+        container.innerHTML = '<tr><td colspan="5" class="text-center">No categories found</td></tr>';
+        return;
+    }
+
+    console.log(`renderCategories() - rendering ${adminState.categories.length} categories`);
+    container.innerHTML = adminState.categories.map(cat => `
+        <tr>
+            <td>${escapeHtml(cat.category_name)}</td>
+            <td>${escapeHtml(cat.description || '-')}</td>
+            <td><span class="badge ${cat.is_active ? 'badge-success' : 'badge-danger'}">
+                ${cat.is_active ? 'Active' : 'Inactive'}</span></td>
+            <td>${cat.display_order}</td>
+            <td class="actions">
+                <button class="btn-icon btn-secondary" onclick="editCategory(${cat.category_id})" title="Edit">✎</button>
+                <button class="btn-icon btn-danger" onclick="deleteCategory(${cat.category_id}, '${escapeHtml(cat.category_name)}')" title="Delete">🗑</button>
+            </td>
+        </tr>
+    `).join('');
 }
+
+function openCategoryModal(categoryId = null) {
+    const modal = document.getElementById('categoryModal');
+    const form = document.getElementById('categoryForm');
+    
+    if (!modal || !form) {
+        showNotification('Error: Modal not found', 'error');
+        return;
+    }
+
+    form.reset();
+    document.getElementById('categoryId').value = '';
+    document.getElementById('categoryModalTitle').textContent = 'Add New Category';
+    document.getElementById('saveCategoryBtn').textContent = 'Create Category';
+
+    if (categoryId) {
+        const category = adminState.categories.find(c => c.category_id == categoryId);
+        if (category) {
+            document.getElementById('categoryId').value = category.category_id;
+            document.getElementById('categoryName').value = category.category_name;
+            document.getElementById('categoryDescription').value = category.description || '';
+            document.getElementById('categoryOrder').value = category.display_order;
+            document.getElementById('categoryIsActive').checked = !!category.is_active;
+            document.getElementById('categoryModalTitle').textContent = 'Edit Category';
+            document.getElementById('saveCategoryBtn').textContent = 'Update Category';
+        }
+    }
+
+    modal.classList.add('active');
+}
+
+function closeCategoryModal() {
+    const modal = document.getElementById('categoryModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+async function submitCategoryForm(event) {
+    event.preventDefault();
+
+    const categoryId = document.getElementById('categoryId').value;
+    const categoryName = document.getElementById('categoryName').value;
+    const description = document.getElementById('categoryDescription').value;
+    const displayOrder = parseInt(document.getElementById('categoryOrder').value);
+    const isActive = document.getElementById('categoryIsActive').checked;
+
+    if (!categoryName.trim()) {
+        showNotification('Category name is required', 'error');
+        return;
+    }
+
+    try {
+        const payload = {
+            category_id: categoryId ? parseInt(categoryId) : null,
+            category_name: categoryName,
+            description: description,
+            display_order: displayOrder,
+            is_active: isActive
+        };
+
+        const result = await apiCall('admin/save_category.php', 'POST', payload);
+        
+        if (result.success) {
+            showNotification(result.message || 'Category saved successfully', 'success');
+            closeCategoryModal();
+            await loadCategories();
+        } else {
+            showNotification(result.message || 'Failed to save category', 'error');
+        }
+    } catch (error) {
+        console.error('Error saving category:', error);
+        showNotification(error.message || 'Failed to save category', 'error');
+    }
+}
+
+function editCategory(categoryId) {
+    openCategoryModal(categoryId);
+}
+
+async function deleteCategory(categoryId, categoryName) {
+    if (!confirm(`Delete "${categoryName}"? This cannot be undone.`)) {
+        return;
+    }
+
+    try {
+        const result = await apiCall('admin/delete_category.php', 'POST', { 
+            category_id: categoryId 
+        });
+        
+        if (result.success) {
+            showNotification('Category deleted successfully', 'success');
+            await loadCategories();
+        } else {
+            showNotification(result.message || 'Failed to delete category', 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting category:', error);
+        showNotification(error.message || 'Failed to delete category', 'error');
+    }
+}
+
+// =========================================================================
+// MEALS MANAGEMENT
+// =========================================================================
+
+async function loadMeals() {
+    try {
+        const result = await apiCall('customer/get_meals.php?include_all=1', 'GET');
+        if (result.success) {
+            adminState.meals = result.data || [];
+            console.log(`Loaded ${adminState.meals.length} meals`);
+        }
+    } catch (error) {
+        console.error('Error loading meals:', error);
+    }
+}
+
+// =========================================================================
+// USERS MANAGEMENT
+// =========================================================================
+
+async function loadUsers() {
+    try {
+        const result = await apiCall('admin/get_users.php', 'GET');
+        if (result.success) {
+            adminState.users = result.data || [];
+            console.log(`Loaded ${adminState.users.length} users`);
+        }
+    } catch (error) {
+        console.error('Error loading users:', error);
+    }
+}
+
+// =========================================================================
+// UTILITIES
+// =========================================================================
+
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+function showNotification(message, type = 'info') {
+    const colors = {
+        success: 'linear-gradient(135deg, #4ade80, #22c55e)',
+        error: 'linear-gradient(135deg, #ef4444, #dc2626)',
+        warning: 'linear-gradient(135deg, #f59e0b, #d97706)',
+        info: 'linear-gradient(135deg, #ff8c42, #ff6b35)'
+    };
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        color: white;
+        background: ${colors[type] || colors.info};
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 9999;
+        animation: slideIn 0.3s ease;
+    `;
+
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Modal close on outside click
+document.addEventListener('click', (e) => {
+    const modal = document.getElementById('categoryModal');
+    if (modal && e.target === modal) {
+        closeCategoryModal();
+    }
+});
+
 
