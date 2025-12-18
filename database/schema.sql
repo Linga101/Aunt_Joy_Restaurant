@@ -66,10 +66,17 @@ VALUES
         2,
         'admin',
         'admin@auntjoy.com',
-        'sytemadmin123456',
+        'systemadmin123456',
         'System Administrator',
         '+265 999 000 000'
-    )
+    ),
+    (2,3,'sales','sales@auntjoy.com','sales123456','Sales Personnel','+265 993 992 585'),
+    (3,4,'manager','manager@auntjoy.com','manager123456','System Manager', '+265 986 587 067'),
+    (4,1,'linga','bsds1223@my.mzuni.ac.mw','lingz goat','Lingalithu Kadewele','+265 887 551 081'),
+    (5,1,'William','bict2823@my.mzuni.ac.mw','bingooh101','William Soko','+265 991 564 309'),
+    (6,1,'Veronica','bsds14@my.mzuni.ac.mw','truevee 66','Veronica Khoswe','+265 882 563 999'),
+    (7,1,'Deborah','bict04@my.mzuni.ac.mw','hustel hard','deborah B', '+265 984 451 278'),
+    (8,1,'Moreen','bsds06@my.mzuni.ac.mw','prettybarbie','Mareen Chunga','+265 888 813 489'),
 ON DUPLICATE KEY UPDATE email = VALUES(email);
 
 -- ---------------------------------------------------------------------------
