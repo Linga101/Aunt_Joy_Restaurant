@@ -26,19 +26,19 @@ require_once __DIR__ . '/../../config/db.php';
     </script>
 
     <!-- Base CSS -->
-    <link rel="stylesheet" href="/aunt_joy/assets/css/style.css">
+    <link rel="stylesheet" href="/aunt_joy/assets/css/style.css?v=<?php echo time(); ?>">
     
     <!-- Page-specific CSS -->
     <?php if(isset($customCSS)): ?>
-        <link rel="stylesheet" href="/aunt_joy/assets/css/<?php echo $customCSS; ?>">
+        <link rel="stylesheet" href="/aunt_joy/assets/css/<?php echo $customCSS; ?>?v=<?php echo time(); ?>">
     <?php endif; ?>
     
     <!-- Base JavaScript -->
-    <script src="/aunt_joy/assets/js/main.js" defer></script>
+    <script src="/aunt_joy/assets/js/main.js?v=<?php echo time(); ?>" defer></script>
     
     <!-- Page-specific JavaScript -->
     <?php if(isset($customJS)): ?>
-        <script src="/aunt_joy/assets/js/<?php echo $customJS; ?>" defer></script>
+        <script src="/aunt_joy/assets/js/<?php echo $customJS; ?>?v=<?php echo time(); ?>" defer></script>
     <?php endif; ?>
 
     <?php

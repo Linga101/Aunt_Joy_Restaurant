@@ -20,8 +20,6 @@ $isCustomer = isLoggedIn() && getCurrentUserRole() === 'Customer';
                     id="menuCartButton"
                     class="cart-button"
                     data-target="/aunt_joy/views/customer/cart.php"
-                    data-locked="false"
-                    data-auth-message="Login to manage your cart."
                 >
                     🛒 Cart (<span id="cartCount">0</span>)
                 </button>
@@ -230,6 +228,10 @@ function renderMeals(mealsToRender) {
                 <h3 class="meal-name">${escapeHtml(meal.meal_name)}</h3>
                 <p class="meal-description">${escapeHtml(meal.meal_description || '')}</p>
                 <div class="meal-footer">
+                    <div class="meal-qty">
+                        <label class="qty-label">Qty</label>
+                        <input type="number" min="1" step="1" value="1" class="qty-input" aria-label="Quantity for ${escapeHtml(meal.meal_name)}">
+                    </div>
                     <div class="meal-price">${meal.price_formatted}</div>
                     <button 
                         class="btn btn-primary add-to-cart-btn"
@@ -297,13 +299,7 @@ function guardMenuCartButton() {
     const cartButton = document.getElementById('menuCartButton');
     if (!cartButton) return;
     cartButton.addEventListener('click', () => {
-        const requiresAuth = cartButton.dataset.locked === 'true';
         const target = cartButton.dataset.target || '/aunt_joy/views/customer/cart.php';
-        if (requiresAuth) {
-            showNotification(cartButton.dataset.authMessage || 'Login to manage your cart.', 'info');
-            setTimeout(() => openAuthModal('login'), 300);
-            return;
-        }
         window.location.href = target;
     });
 }

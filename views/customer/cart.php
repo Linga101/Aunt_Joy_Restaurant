@@ -218,6 +218,17 @@ function setupCartEventDelegation() {
             removeFromCart(index);
         }
     });
+
+    // Delegate quantity input changes (absolute quantity)
+    container.addEventListener('input', function(e) {
+        if (e.target.classList.contains('qty-input-cart')) {
+            const index = parseInt(e.target.dataset.itemIndex);
+            const val = parseInt(e.target.value, 10);
+            if (!Number.isNaN(val)) {
+                setQuantity(index, val);
+            }
+        }
+    });
 }
 
 // Listen for cart updates from cart.js (when quantity changes, items added, etc.)
@@ -271,7 +282,7 @@ function renderCart() {
                 <div class="item-footer">
                     <div class="quantity-selector">
                         <button class="qty-btn btn-qty-decrease" data-item-index="${index}" aria-label="Decrease quantity">−</button>
-                        <span class="qty-display">${item.quantity}</span>
+                        <input type="number" min="1" step="1" class="qty-input-cart" data-item-index="${index}" value="${item.quantity}" aria-label="Quantity for ${item.meal_name}">
                         <button class="qty-btn btn-qty-increase" data-item-index="${index}" aria-label="Increase quantity">+</button>
                     </div>
                     <div class="item-subtotal">
@@ -314,11 +325,6 @@ function updateQuantity(index, change) {
                 return; // Don't go below 1
             }
             
-            if (cart[index].quantity > 10) {
-                showNotification('Maximum quantity is 10 per item', 'warning');
-                cart[index].quantity = 10;
-            }
-            
             saveCart(cart);
             renderCart();
             updateSummary();
@@ -329,6 +335,8 @@ function updateQuantity(index, change) {
         showNotification('Error updating quantity. Please try again.', 'error');
     }
 }
+
+
 
 // Remove from cart
 function removeFromCart(index) {

@@ -4,19 +4,9 @@
  */
 
 function hasCartAccess(showPrompt = false) {
-    if (showPrompt) {
-        const loggedIn = window.AUNT_JOY?.isLoggedIn;
-        const role = window.AUNT_JOY?.role;
-        const allowed = Boolean(loggedIn && role === 'Customer');
-        if (!allowed) {
-            showNotification('Please log in as a customer to use the cart.', 'info');
-            setTimeout(() => {
-                openAuthModal('login');
-            }, 300);
-        }
-        return allowed;
-    }
-    return true; // Always allow access when showPrompt is false
+    // Cart is now accessible to all users, including guests
+    // Authentication will be required at checkout (place_order)
+    return true;
 }
 
 function getCartStorageKey() {
@@ -75,6 +65,24 @@ function addToCart(mealId, mealName, price, imageUrl = '', quantity = 1) {
 }
 
 /**
+ * Set absolute quantity for an item in the cart
+ * @param {number} index - Item index
+ * @param {number} newQuantity - New absolute quantity (min 1)
+ */
+function setQuantity(index, newQuantity) {
+    const cart = getCart();
+    if (!cart[index]) return;
+
+    const qty = Math.max(1, Math.floor(Number(newQuantity) || 1));
+    cart[index].quantity = qty;
+
+    saveCart(cart);
+    updateCartCount();
+    // Trigger custom event for cart page to listen to
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { cart } }));
+}
+
+/**
  * Remove item from cart
  * @param {number} index - Item index in cart
  */
@@ -100,11 +108,6 @@ function updateQuantity(index, change) {
         
         if (cart[index].quantity < 1) {
             cart[index].quantity = 1;
-        }
-        
-        if (cart[index].quantity > 10) {
-            cart[index].quantity = 10;
-            showNotification('Maximum quantity is 10 per item', 'warning');
         }
         
         saveCart(cart);
@@ -194,9 +197,20 @@ document.addEventListener('click', function(e) {
         const mealName = decodeDatasetValue(e.target.dataset.mealName);
         const price = e.target.dataset.price;
         const imageUrl = e.target.dataset.image;
-        
+
+        // Try to read a nearby quantity input (if present in the meal card)
+        let quantity = 1;
+        const card = e.target.closest('.meal-card');
+        if (card) {
+            const qtyInput = card.querySelector('.qty-input');
+            if (qtyInput) {
+                const parsed = parseInt(qtyInput.value, 10);
+                if (!Number.isNaN(parsed) && parsed > 0) quantity = parsed;
+            }
+        }
+
         if (mealId && mealName && price) {
-            addToCart(parseInt(mealId, 10), mealName, parseFloat(price), imageUrl);
+            addToCart(parseInt(mealId, 10), mealName, parseFloat(price), imageUrl, quantity);
         }
     }
 });
