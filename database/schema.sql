@@ -65,8 +65,8 @@ VALUES
         1,
         2,
         'admin',
-        'admin@auntjoy.test',
-        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        'admin@auntjoy.com',
+        'sytemadmin123456',
         'System Administrator',
         '+265 999 000 000'
     )
