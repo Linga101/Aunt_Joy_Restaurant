@@ -98,6 +98,21 @@ function requireRole(...$roles) {
 }
 
 /**
+ * Require authentication and role for API endpoints
+ * @param string ...$roles Allowed roles
+ */
+function requireAuthRole(...$roles) {
+    if (!isLoggedIn()) {
+        jsonResponse(false, null, 'Unauthorized - Please log in');
+    }
+    
+    if (!empty($roles) && !hasRole(...$roles)) {
+        $roleList = implode(', ', $roles);
+        jsonResponse(false, null, "Access denied - Required role: $roleList");
+    }
+}
+
+/**
  * Redirect to URL
  * @param string $url Target URL
  */

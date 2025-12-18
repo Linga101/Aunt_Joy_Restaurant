@@ -70,9 +70,8 @@ async function handleRegister(event) {
         return;
     }
 
-    const payload = {
+const payload = {
         full_name: form.full_name.value.trim(),
-        username: form.username.value.trim(),
         email: form.email.value.trim(),
         phone_number: form.phone_number.value.trim(),
         password,

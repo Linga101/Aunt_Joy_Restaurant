@@ -15,34 +15,33 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $data = json_decode(file_get_contents('php://input'), true);
 
 // Validate required fields
-if (empty($data['username']) || empty($data['password'])) {
-    jsonResponse(false, null, 'Username and password are required');
+if (empty($data['email']) || empty($data['password'])) {
+    jsonResponse(false, null, 'Email and password are required');
 }
 
-$username = sanitize($data['username']);
+$email = sanitize($data['email']);
 $password = $data['password'];
 
 try {
     $db = getDB();
     
-    // Find user by username or email
+    // Find user by email
     $stmt = $db->prepare("
         SELECT u.*, r.role_name 
         FROM users u
         INNER JOIN roles r ON u.role_id = r.role_id
-        WHERE (u.username = :username OR u.email = :email)
+        WHERE u.email = :email
         AND u.is_active = 1
     ");
     
     $stmt->execute([
-        'username' => $username,
-        'email' => $username
+        'email' => $email
     ]);
     $user = $stmt->fetch();
     
     // Check if user exists and password is correct
     if (!$user || !verifyPassword($password, $user['password_hash'])) {
-        jsonResponse(false, null, 'Invalid username or password');
+        jsonResponse(false, null, 'Invalid email or password');
     }
     
     // Update last login
@@ -55,7 +54,6 @@ try {
     
     // Set session variables
     $_SESSION['user_id'] = $user['user_id'];
-    $_SESSION['username'] = $user['username'];
     $_SESSION['email'] = $user['email'];
     $_SESSION['full_name'] = $user['full_name'];
     $_SESSION['role_id'] = $user['role_id'];

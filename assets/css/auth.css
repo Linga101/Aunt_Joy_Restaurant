@@ -83,7 +83,7 @@ body.auth-page.auth-modal-page .back-home {
     z-index: 3;
 }
 
-/* For full page auth (not modal) */
+/* For full page auth */
 body.auth-page .auth-box {
     background: rgba(0, 0, 0, 0.4);
 }

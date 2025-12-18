@@ -721,21 +721,47 @@ async function submitLoginForm() {
  */
 async function submitRegisterForm() {
     const form = document.getElementById('registerForm');
-    const formData = new FormData(form);
+    
+    // Validate form
+    if (!validateForm(form)) {
+        showNotification('Please fill in all required fields.', 'warning');
+        return;
+    }
+    
+    // Check password match
+    const password = form.password.value;
+    const confirmPassword = form.confirm_password.value;
+    
+    if (password !== confirmPassword) {
+        showNotification('Passwords do not match.', 'error');
+        return;
+    }
+    
+    // Prepare JSON payload
+    const payload = {
+        full_name: form.full_name.value.trim(),
+        email: form.email.value.trim(),
+        phone_number: form.phone_number.value.trim(),
+        password: password
+    };
     
     try {
         const response = await fetch('/aunt_joy/controllers/auth/register.php', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify(payload)
         });
         
         const data = await response.json();
         
         if (data.success) {
-            showNotification('Account created successfully! Please log in.', 'success');
+            showNotification('Registration successful! Redirecting...', 'success');
             setTimeout(() => {
-                switchAuthModal('login');
-            }, 1500);
+                window.location.href = '/aunt_joy/views/customer/menu.php';
+            }, 1000);
         } else {
             showNotification(data.message || 'Registration failed', 'error');
         }

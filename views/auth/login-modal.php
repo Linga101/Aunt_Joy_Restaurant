@@ -33,16 +33,16 @@ if (isLoggedIn()) {
 
 <!-- Login Form -->
 <form id="loginForm" class="auth-form">
-    <!-- Username -->
+    <!-- Email -->
     <div class="form-group">
         <div class="input-wrapper">
             <input 
-                type="text" 
-                id="username" 
-                name="username" 
-                placeholder="Username or Email"
+                type="email" 
+                id="email" 
+                name="email" 
+                placeholder="Email"
                 required
-                autocomplete="username"
+                autocomplete="email"
             >
         </div>
     </div>
