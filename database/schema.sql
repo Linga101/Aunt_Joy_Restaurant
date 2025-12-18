@@ -299,7 +299,7 @@ VALUES
         1,
         'lingalithu_kadewele',
         'lingalithu.kadewele@example.com',
-        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        '$2y$10$0uLoRfh1zrnYUXkZYOHnT.6YKQDxRXmowmRQIzUR0Ue557HHuY5VK',
         'Lingalithu Kadewele',
         '+265 999 000 005'
     ),
@@ -308,7 +308,7 @@ VALUES
         1,
         'william_soko',
         'william.soko@example.com',
-        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        '$2y$10$VR.QTYnLRsAD0.hajq2Md.XXOfzcjJtc5Oqtjy/gMMatmHNlH6Lka',
         'William Soko',
         '+265 999 000 006'
     ),
@@ -317,7 +317,7 @@ VALUES
         1,
         'veronica_khoswe',
         'veronica.khoswe@example.com',
-        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        '$2y$10$Q2COgGip0jxT.DaCxtVcwevzPpjNqcpxawIpaEliEvj/R2z9D2CUC',
         'Veronica Khoswe',
         '+265 999 000 007'
     ),
@@ -326,7 +326,7 @@ VALUES
         1,
         'morren_chunga',
         'morren.chunga@example.com',
-        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        '$2y$10$p0IxgjwHQ/qwu030pV25B.a3xoRe.GIDqT8ntpgZ.Z1ET7CRf9DkO',
         'Morren Chunga',
         '+265 999 000 008'
     ),
@@ -335,7 +335,7 @@ VALUES
         1,
         'deborah_banda',
         'deborah.banda@example.com',
-        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        '$2y$10$SfN5P7IIyZaVG4U4Sx7txOdbU9B2utn.qnLzxgZyxHnCMJ35ywWIC',
         'Deborah Banda',
         '+265 999 000 009'
     ),
@@ -344,7 +344,7 @@ VALUES
         3,
         'samuel_phiri',
         'samuel.phiri@auntjoy.test',
-        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        '$2y$10$laGpebDoSfsgEYy33udgaekvWmDFALr/czuDK7CscHtl4/lji/iHy',
         'Samuel Phiri',
         '+265 999 111 010'
     ),
@@ -353,7 +353,7 @@ VALUES
         3,
         'grace_mwale',
         'grace.mwale@auntjoy.test',
-        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        '$2y$10$ltj3RYg92ZDqpKuA1TYT6.xLoAXVSQ47uYeotWvzVcqACNrXax//6',
         'Grace Mwale',
         '+265 999 111 011'
     ),
@@ -362,7 +362,7 @@ VALUES
         4,
         'patrick_kachali',
         'patrick.kachali@auntjoy.test',
-        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        '$2y$10$mrx3IBz9M9HRNelxnU26SOrL7yFKl0wPRCVLeHcKAaIFozWD.9BUe',
         'Patrick Kachali',
         '+265 999 222 012'
     )
