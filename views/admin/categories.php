@@ -26,7 +26,7 @@ include '../templates/header.php';
                 <button class="btn btn-secondary" onclick="loadCategories()">
                     🔄 Refresh
                 </button>
-                <button class="btn btn-primary" onclick="openCategoryModalNew()">
+                <button class="btn btn-primary" onclick="openCategoryModal()">
                     + Add New Category
                 </button>
             </div>
@@ -70,69 +70,72 @@ include '../templates/header.php';
     </main>
 </div>
 
-<!-- Category Form Modal -->
-<div id="categoryFormModal" class="modal">
+<!-- Category Form Modal (Shared with Dashboard) -->
+<div id="categoryModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 id="categoryFormModalTitle">Add New Category</h2>
-            <span class="modal-close" onclick="closeCategoryFormModal()">&times;</span>
+            <h2 id="categoryModalTitle">Add New Category</h2>
+            <span class="modal-close" onclick="closeCategoryModal()">&times;</span>
         </div>
-        <form id="categoryFormNew" class="modal-body" onsubmit="submitCategoryFormNew(event)">
-            <input type="hidden" id="categoryIdNew" name="category_id">
+        <div class="modal-body">
+            <!-- Category Form -->
+            <form id="categoryForm" onsubmit="submitCategoryForm(event)">
+                <input type="hidden" id="categoryId" name="category_id">
 
-            <div class="form-group">
-                <label>Category Name *</label>
-                <input 
-                    type="text" 
-                    id="categoryNameNew" 
-                    name="category_name"
-                    class="form-control"
-                    placeholder="e.g., Local Favorites"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label>Description</label>
-                <textarea 
-                    id="categoryDescriptionNew" 
-                    name="description"
-                    class="form-control"
-                    placeholder="Describe this category..."
-                    rows="3"
-                ></textarea>
-            </div>
-
-            <div class="form-row">
                 <div class="form-group">
-                    <label>Display Order</label>
+                    <label>Category Name *</label>
                     <input 
-                        type="number" 
-                        id="categoryOrderNew" 
-                        name="display_order"
+                        type="text" 
+                        id="categoryName" 
+                        name="category_name"
                         class="form-control"
-                        value="1"
-                        min="1"
+                        placeholder="e.g., Local Favorites"
+                        required
                     >
                 </div>
 
                 <div class="form-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="categoryIsActiveNew" name="is_active" checked>
-                        <span>Active</span>
-                    </label>
+                    <label>Description</label>
+                    <textarea 
+                        id="categoryDescription" 
+                        name="description"
+                        class="form-control"
+                        placeholder="Describe this category..."
+                        rows="3"
+                    ></textarea>
                 </div>
-            </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeCategoryFormModal()">
-                    Cancel
-                </button>
-                <button type="submit" class="btn btn-primary" id="saveCategoryBtnNew">
-                    Create Category
-                </button>
-            </div>
-        </form>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Display Order</label>
+                        <input 
+                            type="number" 
+                            id="categoryOrder" 
+                            name="display_order"
+                            class="form-control"
+                            value="1"
+                            min="1"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="categoryIsActive" name="is_active" checked>
+                            <span>Active</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="saveCategoryBtn">
+                        Create Category
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -143,86 +146,16 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCategories();
 });
 
-// Helper functions for this page
-function openCategoryModalNew(categoryId = null) {
-    const modal = document.getElementById('categoryFormModal');
-    const form = document.getElementById('categoryFormNew');
-    
-    if (!modal || !form) {
-        showNotification('Error: Modal elements not found', 'error');
-        return;
-    }
-
-    form.reset();
-    document.getElementById('categoryIdNew').value = '';
-    document.getElementById('categoryFormModalTitle').textContent = 'Add New Category';
-    document.getElementById('saveCategoryBtnNew').textContent = 'Create Category';
-
-    if (categoryId) {
-        const category = adminState.categories.find(c => c.category_id == categoryId);
-        if (category) {
-            document.getElementById('categoryIdNew').value = category.category_id;
-            document.getElementById('categoryNameNew').value = category.category_name;
-            document.getElementById('categoryDescriptionNew').value = category.description || '';
-            document.getElementById('categoryOrderNew').value = category.display_order;
-            document.getElementById('categoryIsActiveNew').checked = !!category.is_active;
-            document.getElementById('categoryFormModalTitle').textContent = 'Edit Category';
-            document.getElementById('saveCategoryBtnNew').textContent = 'Update Category';
-        }
-    }
-
-    modal.classList.add('active');
-}
-
-function closeCategoryFormModal() {
-    const modal = document.getElementById('categoryFormModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-}
-
-async function submitCategoryFormNew(event) {
-    event.preventDefault();
-
-    const categoryId = document.getElementById('categoryIdNew').value;
-    const categoryName = document.getElementById('categoryNameNew').value;
-    const categoryDescription = document.getElementById('categoryDescriptionNew').value;
-    const categoryOrder = document.getElementById('categoryOrderNew').value;
-    const isActive = document.getElementById('categoryIsActiveNew').checked;
-
-    if (!categoryName.trim()) {
-        showNotification('Category name is required', 'error');
-        return;
-    }
-
-    try {
-        const payload = {
-            category_id: categoryId ? parseInt(categoryId) : null,
-            category_name: categoryName,
-            description: categoryDescription,
-            display_order: parseInt(categoryOrder),
-            is_active: isActive
-        };
-
-        const result = await apiCall('admin/save_category.php', 'POST', payload);
-
-        if (result.success) {
-            showNotification(result.message || 'Category saved successfully', 'success');
-            closeCategoryFormModal();
-            await loadCategories();
-        } else {
-            showNotification(result.message || 'Failed to save category', 'error');
-        }
-    } catch (error) {
-        console.error('Failed to save category:', error);
-        showNotification(error.message || 'Failed to save category', 'error');
-    }
-}
-
-// Override the renderCategories to use the new edit function
-function renderCategoriesPage() {
+// Override renderCategories to add proper event listeners on this page
+const originalRenderCategories = window.renderCategories;
+window.renderCategories = function() {
     const container = document.getElementById('categoriesTableBody');
-    if (!container) return;
+    if (!container) {
+        if (originalRenderCategories) {
+            originalRenderCategories();
+        }
+        return;
+    }
 
     if (adminState.categories.length === 0) {
         container.innerHTML = '<tr><td colspan="5" class="text-center">No categories found. Create one to get started.</td></tr>';
@@ -246,7 +179,7 @@ function renderCategoriesPage() {
     document.querySelectorAll('#categoriesTableBody button[data-action="edit"]').forEach(btn => {
         btn.addEventListener('click', function() {
             const categoryId = parseInt(this.dataset.id);
-            openCategoryModalNew(categoryId);
+            openCategoryModal(categoryId);
         });
     });
     
@@ -255,16 +188,6 @@ function renderCategoriesPage() {
             deleteCategory(parseInt(this.dataset.id), this.dataset.name);
         });
     });
-}
-
-// Override renderCategories when on this page
-const originalRenderCategories = window.renderCategories;
-window.renderCategories = function() {
-    if (document.getElementById('categoriesTableBody')) {
-        renderCategoriesPage();
-    } else if (originalRenderCategories) {
-        originalRenderCategories();
-    }
 };
 </script>
 

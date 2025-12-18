@@ -26,6 +26,7 @@ $userRole = getCurrentUserRole();
     
     <!-- Navigation Menu -->
     <nav class="sidebar-nav">
+        <!-- DEBUG: Role is <?php echo htmlspecialchars($userRole ?? 'NULL'); ?> -->
         <ul class="nav-list">
             <?php if($userRole === 'Customer'): ?>
                 <!-- Customer Menu -->
@@ -75,12 +76,6 @@ $userRole = getCurrentUserRole();
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/aunt_joy/views/admin/categories.php" class="nav-link">
-                        <span class="nav-icon">📂</span>
-                        <span>Categories Management</span>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="/aunt_joy/views/auth/profile.php" class="nav-link">
                         <span class="nav-icon">⚙️</span>
                         <span>Settings</span>
@@ -116,6 +111,16 @@ $userRole = getCurrentUserRole();
                         <span>Profile</span>
                     </a>
                 </li>
+            <?php endif; ?>
+            
+            <!-- Categories Management - Always show for Admins -->
+            <?php if($userRole === 'Administrator' || hasRole('Administrator')): ?>
+            <li class="nav-item">
+                <a href="/aunt_joy/views/admin/categories.php" class="nav-link">
+                    <span class="nav-icon">📂</span>
+                    <span>Categories Management</span>
+                </a>
+            </li>
             <?php endif; ?>
             
             <!-- Logout (All Users) -->

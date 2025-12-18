@@ -6,17 +6,28 @@
 
 require_once '../../config/db.php';
 
+// Set JSON header immediately
+header('Content-Type: application/json');
+
+// Debug: Log that the file was accessed
+error_log('save_category.php accessed at ' . date('Y-m-d H:i:s'));
+
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    error_log('Invalid request method: ' . $_SERVER['REQUEST_METHOD']);
     jsonResponse(false, null, 'Invalid request method');
 }
 
 // Check authentication and authorization
 if (!isLoggedIn()) {
+    error_log('User is not logged in');
     jsonResponse(false, null, 'Unauthorized - Please log in');
 }
 
+error_log('User logged in. Role: ' . getCurrentUserRole());
+
 if (!hasRole('Administrator')) {
+    error_log('User does not have Administrator role. Role: ' . getCurrentUserRole());
     jsonResponse(false, null, 'Access denied - Administrator role required');
 }
 
