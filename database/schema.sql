@@ -293,6 +293,78 @@ VALUES
         '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
         'Restaurant Manager',
         '+265 999 111 111'
+    ),
+    (
+        5,
+        1,
+        'lingalithu_kadewele',
+        'lingalithu.kadewele@example.com',
+        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        'Lingalithu Kadewele',
+        '+265 999 000 005'
+    ),
+    (
+        6,
+        1,
+        'william_soko',
+        'william.soko@example.com',
+        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        'William Soko',
+        '+265 999 000 006'
+    ),
+    (
+        7,
+        1,
+        'veronica_khoswe',
+        'veronica.khoswe@example.com',
+        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        'Veronica Khoswe',
+        '+265 999 000 007'
+    ),
+    (
+        8,
+        1,
+        'morren_chunga',
+        'morren.chunga@example.com',
+        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        'Morren Chunga',
+        '+265 999 000 008'
+    ),
+    (
+        9,
+        1,
+        'deborah_banda',
+        'deborah.banda@example.com',
+        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        'Deborah Banda',
+        '+265 999 000 009'
+    ),
+    (
+        10,
+        3,
+        'samuel_phiri',
+        'samuel.phiri@auntjoy.test',
+        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        'Samuel Phiri',
+        '+265 999 111 010'
+    ),
+    (
+        11,
+        3,
+        'grace_mwale',
+        'grace.mwale@auntjoy.test',
+        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        'Grace Mwale',
+        '+265 999 111 011'
+    ),
+    (
+        12,
+        4,
+        'patrick_kachali',
+        'patrick.kachali@auntjoy.test',
+        '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC',
+        'Patrick Kachali',
+        '+265 999 222 012'
     )
 ON DUPLICATE KEY UPDATE email = VALUES(email);
 
