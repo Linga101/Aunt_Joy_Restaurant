@@ -350,7 +350,7 @@ VALUES
     ),
     (
         11,
-        3,
+        2,
         'grace_mwale',
         'grace.mwale@auntjoy.test',
         '$2y$10$ltj3RYg92ZDqpKuA1TYT6.xLoAXVSQ47uYeotWvzVcqACNrXax//6',
