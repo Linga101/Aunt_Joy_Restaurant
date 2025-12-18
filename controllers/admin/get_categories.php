@@ -26,9 +26,10 @@ if (!isLoggedIn()) {
 
 error_log('User logged in. Role: ' . getCurrentUserRole());
 
-if (!hasRole('Administrator')) {
-    error_log('User does not have Administrator role. Role: ' . getCurrentUserRole());
-    jsonResponse(false, null, 'Access denied - Administrator role required');
+// Allow both Administrators and Managers to retrieve categories
+if (!hasRole('Administrator', 'Manager')) {
+    error_log('User does not have required role. Role: ' . getCurrentUserRole());
+    jsonResponse(false, null, 'Access denied - Administrator or Manager role required');
 }
 
 try {

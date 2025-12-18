@@ -460,3 +460,20 @@ include '../templates/header.php';
 </div>
 
 <?php include '../templates/footer.php'; ?>
+
+<script>
+// Inline debug: check whether `loadCategories` is available and call it to force the network request
+setTimeout(function() {
+    try {
+        console.log('inline-debug: typeof loadCategories =', typeof loadCategories);
+        if (typeof loadCategories === 'function') {
+            console.log('inline-debug: calling loadCategories() to force request');
+            loadCategories();
+        } else {
+            console.warn('inline-debug: loadCategories() not defined yet');
+        }
+    } catch (e) {
+        console.error('inline-debug error:', e);
+    }
+}, 1200);
+</script>

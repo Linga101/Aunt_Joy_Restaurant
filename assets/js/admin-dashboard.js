@@ -9,6 +9,9 @@ const adminState = {
     users: [],
 };
 
+// Debug: indicate the admin-dashboard script file was loaded
+console.log('admin-dashboard.js loaded');
+
 // =========================================================================
 // INITIALIZATION
 // =========================================================================
@@ -1077,15 +1080,40 @@ function submitDashboardUserForm(event) {
 async function loadCategories() {
     try {
         console.log('loadCategories() - requesting data from backend');
-        const result = await apiCall('admin/get_categories.php', 'GET');
-        console.log('loadCategories() - response received:', result);
-        
-        if (result.success) {
+        // Resolve and log the full URL used for the API call
+        try {
+            const resolved = resolveEndpoint('admin/get_categories.php');
+            console.log('Resolved get_categories endpoint:', resolved);
+        } catch (e) {
+            console.warn('Could not resolve endpoint:', e);
+        }
+
+        // Primary attempt: admin endpoint (requires role)
+        let result = null;
+        try {
+            result = await apiCall('admin/get_categories.php', 'GET');
+            console.log('loadCategories() - admin endpoint response:', result);
+        } catch (err) {
+            console.warn('loadCategories() - admin endpoint failed:', err.message || err);
+        }
+
+        // If admin endpoint didn't return usable data, fall back to public customer endpoint
+        if (!result || !result.success || !Array.isArray(result.data)) {
+            console.log('loadCategories() - falling back to customer/get_meals.php?categories=true');
+            try {
+                result = await apiCall('customer/get_meals.php?categories=true', 'GET');
+                console.log('loadCategories() - fallback response:', result);
+            } catch (err) {
+                console.error('loadCategories() - fallback failed:', err.message || err);
+            }
+        }
+
+        if (result && result.success) {
             adminState.categories = result.data || [];
             console.log(`loadCategories() - ${adminState.categories.length} categories loaded`);
             renderCategories();
         } else {
-            console.warn('loadCategories() - API error:', result.message);
+            console.warn('loadCategories() - API error or no data returned');
         }
     } catch (error) {
         console.error('loadCategories() - exception:', error);
