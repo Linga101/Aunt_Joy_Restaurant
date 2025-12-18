@@ -543,7 +543,7 @@ async function deleteMeal(mealId, mealName) {
     try {
         const result = await apiCall("admin/delete_meal.php", "POST", { meal_id: mealId });
         showNotification(result.message || "Meal deleted", "success");
-        await loadMeals();
+        await loadMeals({ includeAll: true }); // Ensure all meals are reloaded, including unavailable ones
     } catch (error) {
         console.error("Failed to delete meal:", error);
         showNotification(error.message || "Failed to delete meal", "error");

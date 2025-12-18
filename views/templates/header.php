@@ -82,20 +82,9 @@ require_once __DIR__ . '/../../config/db.php';
 
                 <div class="nav-actions">
                     <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
-                        <span class="theme-icon">🌙</span>
+                        <span class="theme-icon"><img src="assets/images/icons/moon_16740252.png"></span>
                     </button>
-
-                    <a 
-                        href="<?php echo $cartUrl; ?>" 
-                        class="nav-cart <?php echo ($isLoggedIn && $currentRole === 'Customer') ? '' : 'requires-login'; ?>"
-                        data-requires-auth="<?php echo ($isLoggedIn && $currentRole === 'Customer') ? 'false' : 'true'; ?>"
-                        data-auth-message="Login to view and manage your cart."
-                        data-redirect="/aunt_joy/views/auth/login.php?next=cart"
-                    >
-                        <span class="cart-icon">🛒</span>
-                        <span class="cart-text">Cart</span>
-                        <span id="cartBadge" class="cart-badge">0</span>
-                    </a>
+                    
 
                     <?php if($isLoggedIn): ?>
                         <div class="nav-user-chip">
@@ -109,14 +98,26 @@ require_once __DIR__ . '/../../config/db.php';
                         </div>
                         <a href="/aunt_joy/controllers/auth/logout.php" class="btn btn-secondary nav-auth-btn">Logout</a>
                     <?php else: ?>
-                        <a href="/aunt_joy/views/auth/login.php" class="nav-link">Login</a>
-                        <a href="/aunt_joy/views/auth/register.php" class="btn btn-primary nav-auth-btn">Sign Up</a>
+                        <a href="#" class="nav-link" onclick="openAuthModal('login'); return false;">Login</a>
+                        <a href="#" class="btn btn-primary nav-auth-btn" onclick="openAuthModal('register'); return false;">Sign Up</a>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
     </nav>
     <?php endif; ?>
+
+    <!-- Auth Modal Overlay -->
+    <div id="authModal" class="auth-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <!-- Close Button -->
+            <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+            
+            <!-- Modal Body (will be populated dynamically) -->
+            <div id="authModalBody" style="padding: 2rem; max-height: 90vh; overflow-y: auto;"></div>
+        </div>
+    </div>
     
     <!-- Main Content Wrapper -->
     <div class="content-wrapper">

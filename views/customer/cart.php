@@ -1,7 +1,5 @@
 <?php
 require_once '../../config/db.php';
-requireAuth();
-requireRole('Customer');
 
 $pageTitle = "Shopping Cart - Aunt Joy's Restaurant";
 $customCSS = "customer.css";
@@ -104,7 +102,6 @@ include '../templates/header.php';
                         <p class="promo-hint">Try: WELCOME10, SAVE500, or FIRSTORDER</p>
                     </div>
                 </div>
-
                 <!-- Delivery Details Card -->
                 <div class="delivery-card">
                     <h3 class="card-title">Delivery Information</h3>
@@ -183,6 +180,9 @@ let discountAmount = 0;
 
 // Load cart on page load
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize cart count for guests
+    updateCartCount();
+    
     renderCart();
     updateSummary();
     
@@ -397,6 +397,16 @@ async function checkout() {
     const address = document.getElementById('deliveryAddress').value.trim();
     const phone = document.getElementById('contactNumber').value.trim();
     const instructions = document.getElementById('specialInstructions').value.trim();
+    
+    // Check if user is logged in before placing order
+    if (!window.AUNT_JOY?.isLoggedIn) {
+        showNotification('Please log in to place an order', 'info');
+        // Use modal authentication instead of redirecting
+        setTimeout(() => {
+            openAuthModal('login');
+        }, 300);
+        return;
+    }
     
     if (!address) {
         showNotification('Please enter your delivery address', 'warning');
