@@ -129,19 +129,30 @@ try {
         
         $categoryBreakdown = $categoryStmt->fetchAll();
         
+        // Ensure summary values are not null
+        $summary['total_orders'] = (int)($summary['total_orders'] ?? 0);
+        $summary['total_revenue'] = (float)($summary['total_revenue'] ?? 0);
+        $summary['average_order_value'] = (float)($summary['average_order_value'] ?? 0);
+        $summary['completed_orders'] = (int)($summary['completed_orders'] ?? 0);
+        $summary['cancelled_orders'] = (int)($summary['cancelled_orders'] ?? 0);
+        
         // Format currency values
-        $summary['total_revenue_formatted'] = formatCurrency($summary['total_revenue'] ?? 0);
-        $summary['average_order_value_formatted'] = formatCurrency($summary['average_order_value'] ?? 0);
+        $summary['total_revenue_formatted'] = formatCurrency($summary['total_revenue']);
+        $summary['average_order_value_formatted'] = formatCurrency($summary['average_order_value']);
         
         foreach ($bestSellers as &$item) {
+            $item['total_revenue'] = (float)($item['total_revenue'] ?? 0);
+            $item['total_quantity'] = (int)($item['total_quantity'] ?? 0);
             $item['total_revenue_formatted'] = formatCurrency($item['total_revenue']);
         }
         
         foreach ($dailySales as &$day) {
+            $day['daily_revenue'] = (float)($day['daily_revenue'] ?? 0);
             $day['daily_revenue_formatted'] = formatCurrency($day['daily_revenue']);
         }
         
         foreach ($categoryBreakdown as &$category) {
+            $category['category_revenue'] = (float)($category['category_revenue'] ?? 0);
             $category['category_revenue_formatted'] = formatCurrency($category['category_revenue']);
         }
         

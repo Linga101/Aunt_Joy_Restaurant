@@ -83,7 +83,7 @@ include '../templates/header.php';
                         <p>View and manage system users</p>
                     </button>
 
-                    <button class="action-card" onclick="openCategoryModal()">
+                    <button class="action-card" onclick="location.href='/aunt_joy/views/admin/categories.php'">
                         <div class="action-icon">📂</div>
                         <h3>Categories</h3>
                         <p>Add, edit or manage categories</p>

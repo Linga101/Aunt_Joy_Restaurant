@@ -81,6 +81,12 @@ $userRole = getCurrentUserRole();
                         <span>Settings</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="/aunt_joy/views/admin/categories.php" class="nav-link">
+                        <span class="nav-icon">📂</span>
+                        <span>Categories Management</span>
+                    </a>
+                </li>
                 
             <?php elseif(hasRole('Sales Personnel')): ?>
                 <!-- Sales Menu -->
@@ -113,14 +119,14 @@ $userRole = getCurrentUserRole();
                 </li>
             <?php endif; ?>
             
-            <!-- Categories Management - Always show for Admins -->
-                <?php if(hasRole('Administrator') || hasRole('Manager')): ?>
-            <li class="nav-item">
-                <a href="/aunt_joy/views/admin/categories.php" class="nav-link">
-                    <span class="nav-icon">📂</span>
-                    <span>Categories Management</span>
-                </a>
-            </li>
+            <!-- Categories Management - Show for Managers -->
+            <?php if(hasRole('Manager') && !hasRole('Administrator')): ?>
+                <li class="nav-item">
+                    <a href="/aunt_joy/views/admin/categories.php" class="nav-link">
+                        <span class="nav-icon">📂</span>
+                        <span>Categories Management</span>
+                    </a>
+                </li>
             <?php endif; ?>
             
             <!-- Logout (All Users) -->
