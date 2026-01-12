@@ -395,7 +395,7 @@ async function submitMealForm(event) {
 }
 
 async function deleteMeal(mealId, mealName) {
-    if (!confirm(`Are you sure you want to delete "${mealName}"?`)) {
+    if (!confirm(`Are you sure you want to permanently delete "${mealName}"? This action cannot be undone and may affect related data.`)) {
         return;
     }
 
@@ -723,7 +723,7 @@ function submitUserForm(event) {
 }
 
 function deleteUser(userId) {
-    if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+    if (!confirm('Are you sure you want to permanently delete this user? This action cannot be undone and may affect related data.')) {
         return;
     }
     
