@@ -223,4 +223,85 @@ include '../templates/header.php';
     </div>
 </div>
 
+<script>
+// Initialize page when DOM loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Meals page loaded");
+    
+    // Load meals on page load
+    loadMeals();
+    
+    // Add search functionality
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            filterMeals(this.value);
+        });
+    }
+    
+    // Add image file change listener
+    const imageFileInput = document.getElementById('mealImageFile');
+    if (imageFileInput) {
+        imageFileInput.addEventListener('change', handleMealImageChange);
+    }
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('mealModal');
+        if (event.target === modal) {
+            closeMealModal();
+        }
+    });
+});
+
+// Override renderMeals to ensure proper rendering on this page
+const originalRenderMeals = window.renderMeals;
+window.renderMeals = function(meals) {
+    const container = document.getElementById('mealsTableBody');
+    if (!container) {
+        if (originalRenderMeals) {
+            originalRenderMeals(meals || adminState.meals || []);
+        }
+        return;
+    }
+    
+    if (!meals || meals.length === 0) {
+        container.innerHTML = '<tr><td colspan="6" class="text-center">No meals found. Create one to get started.</td></tr>';
+        return;
+    }
+    
+    container.innerHTML = meals.map(meal => {
+        const hasImage = meal.image_url && meal.image_url.includes("/");
+        const imageMarkup = hasImage
+            ? `<img src="/aunt_joy/${escapeHtml(meal.image_url)}" alt="${escapeHtml(meal.meal_name)}" class="meal-thumb">`
+            : `<span class="meal-image-fallback">🍽️</span>`;
+        return `
+            <tr>
+                <td class="meal-image-cell">${imageMarkup}</td>
+                <td><strong>${escapeHtml(meal.meal_name)}</strong></td>
+                <td>${escapeHtml(meal.category_name || '-')}</td>
+                <td><strong>${meal.price_formatted || formatCurrency(meal.price)}</strong></td>
+                <td>
+                    <span class="status-badge ${meal.is_available ? 'status-available' : 'status-unavailable'}">
+                        ${meal.is_available ? 'Available' : 'Out of Stock'}
+                    </span>
+                    ${meal.is_featured ? '<span class="badge-featured">⭐</span>' : ''}
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn-icon" onclick="openMealModal(${meal.meal_id})" title="Edit">✏️</button>
+                        <button class="btn-icon btn-danger" onclick="deleteMeal(${meal.meal_id}, '${escapeHtml(meal.meal_name).replace(/'/g, "\\'")}')" title="Delete">🗑️</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join('');
+    
+    // Update stats
+    if (typeof updateMealStats === 'function') {
+        updateMealStats();
+    }
+};
+</script>
+
 <?php include '../templates/footer.php'; ?>

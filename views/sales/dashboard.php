@@ -139,10 +139,10 @@ document.addEventListener('visibilitychange', function() {
 async function loadOrders() {
     console.log("loadOrders called");
     try {
-        console.log("Fetching from /aunt_joy/controllers/sales/get_orders.php");
+        console.log("Fetching from /Aunt_Joy_Restaurant/controllers/sales/get_orders.php");
         
         // Use fetch with proper headers for session preservation
-        const response = await fetch('/aunt_joy/controllers/sales/get_orders.php', {
+        const response = await fetch('/Aunt_Joy_Restaurant/controllers/sales/get_orders.php', {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
@@ -325,7 +325,7 @@ async function updateStatus(orderId, newStatus) {
         
         console.log("Sending payload:", payload);
         
-        const response = await fetch('/aunt_joy/controllers/sales/update_status.php', {
+        const response = await fetch('/Aunt_Joy_Restaurant/controllers/sales/update_status.php', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
@@ -392,7 +392,7 @@ async function viewOrderDetails(orderId) {
     try {
         console.log(`viewOrderDetails called for orderId: ${orderId}`);
         
-        const response = await fetch(`/aunt_joy/controllers/sales/get_orders.php?order_id=${orderId}`, {
+        const response = await fetch(`/Aunt_Joy_Restaurant/controllers/sales/get_orders.php?order_id=${orderId}`, {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'

@@ -19,7 +19,7 @@ include '../templates/header.php';
         <div class="dashboard-header">
             <div>
                 <h1>Sales Reports & Analytics</h1>
-                <p>📅 Today: <?php echo date('l, F j, Y'); ?></p>
+                <p id="reportPeriod">📅 Report Period: December 2025</p>
             </div>
             <div class="header-actions">
                 <button class="btn btn-secondary" onclick="generateReport()">
@@ -56,9 +56,13 @@ include '../templates/header.php';
                     <div class="form-group">
                         <label>Year</label>
                         <select id="yearSelect" class="form-control">
-                            <option value="2023">2023</option>
-                            <option value="2024">2024</option>
-                            <option value="2025" selected>2025</option>
+                            <?php
+                            $defaultYear = 2025; // Year with sample data
+                            for ($year = 2023; $year <= 2027; $year++) {
+                                $selected = ($year == $defaultYear) ? 'selected' : '';
+                                echo "<option value=\"$year\" $selected>$year</option>";
+                            }
+                            ?>
                         </select>
                     </div>
 
@@ -166,8 +170,8 @@ include '../templates/header.php';
 </div>
 
 <script>
-let currentMonth = new Date().getMonth() + 1;
-let currentYear = new Date().getFullYear();
+let currentMonth = 12; // December (where sample data exists)
+let currentYear = 2025; // Year with sample data
 
 // Set current month/year on load
 document.addEventListener('DOMContentLoaded', function() {
@@ -198,7 +202,7 @@ async function generateReport() {
     currentYear = year;
     
     try {
-        const response = await fetch(`/aunt_joy/controllers/manager/get_report.php?month=${month}&year=${year}&type=summary`);
+        const response = await fetch(`/Aunt_Joy_Restaurant/controllers/manager/get_report.php?month=${month}&year=${year}&type=summary`);
         const result = await response.json();
         
         if (result.success) {
@@ -214,6 +218,14 @@ async function generateReport() {
 
 // Display report
 function displayReport(data) {
+    // Update report period display
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                       'July', 'August', 'September', 'October', 'November', 'December'];
+    const periodElement = document.getElementById('reportPeriod');
+    if (periodElement && data.period) {
+        periodElement.textContent = `📅 Report Period: ${monthNames[data.period.month - 1]} ${data.period.year}`;
+    }
+    
     // Update stats
     const summary = data.summary;
     document.getElementById('totalRevenue').textContent = summary.total_revenue_formatted || 'MK 0';
@@ -307,7 +319,7 @@ function exportPDF() {
     
     showNotification('Generating PDF report...', 'info');
     
-    window.open(`/aunt_joy/controllers/manager/export_pdf.php?month=${month}&year=${year}`, '_blank');
+    window.open(`/Aunt_Joy_Restaurant/controllers/manager/export_pdf.php?month=${month}&year=${year}`, '_blank');
 }
 
 // Export to Excel
@@ -317,7 +329,7 @@ function exportExcel() {
     
     showNotification('Generating Excel report...', 'info');
     
-    window.open(`/aunt_joy/controllers/manager/export_excel.php?month=${month}&year=${year}`, '_blank');
+    window.open(`/Aunt_Joy_Restaurant/controllers/manager/export_excel.php?month=${month}&year=${year}`, '_blank');
 }
 </script>
 

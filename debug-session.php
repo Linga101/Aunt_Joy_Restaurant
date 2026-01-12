@@ -53,8 +53,9 @@ echo "hasRole('Customer'): " . (hasRole('Customer') ? 'YES' : 'NO') . "\n";
     </div>
 
     <div style="text-align: center; margin-top: 2rem;">
-        <a href="/aunt_joy/views/admin/dashboard.php" class="btn btn-primary">Go to Dashboard</a>
+        <a href="/Aunt_Joy_Restaurant/views/admin/dashboard.php" class="btn btn-primary">Go to Dashboard</a>
     </div>
 </div>
 
 <?php include __DIR__ . '/views/templates/footer.php'; ?>
+

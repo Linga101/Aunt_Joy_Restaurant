@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../config/db.php';
 
 // Redirect if already logged in
 if (isLoggedIn()) {
-    echo json_encode(['redirect' => '/aunt_joy/index.php']);
+    echo json_encode(['redirect' => '/Aunt_Joy_Restaurant/index.php']);
     exit;
 }
 ?>
@@ -116,3 +116,4 @@ if (isLoggedIn()) {
         <a href="#" onclick="switchAuthModal('login'); return false;">Sign in instead</a>
     </div>
 </form>
+

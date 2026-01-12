@@ -6,6 +6,8 @@
 
 require_once '../../config/db.php';
 
+initSession();
+
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonResponse(false, null, 'Invalid request method');

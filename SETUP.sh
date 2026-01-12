@@ -30,5 +30,6 @@ if [[ "$import_choice" == "y" || "$import_choice" == "Y" ]]; then
     fi
 fi
 
-echo "🎉 Setup complete. Visit http://localhost/aunt_joy/ to get started."
+echo "🎉 Setup complete. Visit http://localhost/Aunt_Joy_Restaurant/ to get started."
+
 

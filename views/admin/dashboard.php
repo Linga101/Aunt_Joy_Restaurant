@@ -71,19 +71,19 @@ include '../templates/header.php';
             </div>
             <div class="card-body">
                 <div class="quick-actions-grid">
-                    <button class="action-card" onclick="location.href='/aunt_joy/views/admin/meals.php'">
+                    <button class="action-card" onclick="location.href='/Aunt_Joy_Restaurant/views/admin/meals.php'">
                         <div class="action-icon">🍽️</div>
                         <h3>Manage Meals</h3>
                         <p>Add, edit or delete meals</p>
                     </button>
 
-                    <button class="action-card" onclick="location.href='/aunt_joy/views/admin/users.php'">
+                    <button class="action-card" onclick="location.href='/Aunt_Joy_Restaurant/views/admin/users.php'">
                         <div class="action-icon">👥</div>
                         <h3>Manage Users</h3>
                         <p>View and manage system users</p>
                     </button>
 
-                    <button class="action-card" onclick="openCategoryModal()">
+                    <button class="action-card" onclick="location.href='/Aunt_Joy_Restaurant/views/admin/categories.php'">
                         <div class="action-icon">📂</div>
                         <h3>Categories</h3>
                         <p>Add, edit or manage categories</p>
@@ -123,7 +123,7 @@ include '../templates/header.php';
         <div class="card">
             <div class="card-header">
                 <h2>Recent Orders</h2>
-                <a href="/aunt_joy/views/sales/dashboard.php" class="btn btn-secondary btn-sm">
+                <a href="/Aunt_Joy_Restaurant/views/sales/dashboard.php" class="btn btn-secondary btn-sm">
                     View All
                 </a>
             </div>

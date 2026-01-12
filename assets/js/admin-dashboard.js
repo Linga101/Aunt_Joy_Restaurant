@@ -28,7 +28,8 @@ async function initializeDashboard() {
             loadStats(),
             loadCategories(),
             loadMeals(),
-            loadUsers()
+            loadUsers(),
+            loadRecentOrders()
         ]);
         console.log('Dashboard initialization complete');
     } catch (error) {
@@ -67,6 +68,80 @@ async function loadStats() {
     } catch (error) {
         console.error('Failed to load stats:', error);
     }
+}
+
+// =========================================================================
+// RECENT ORDERS LOADING
+// =========================================================================
+
+async function loadRecentOrders() {
+    try {
+        const response = await apiCall('sales/get_orders.php', 'GET');
+        
+        if (response && response.success) {
+            // Take only the first 5 recent orders
+            const recentOrders = (response.data || []).slice(0, 5);
+            displayRecentOrders(recentOrders);
+        } else {
+            console.error('Failed to load recent orders:', response?.message);
+            document.getElementById('recentOrders').innerHTML = 
+                '<p class="text-muted">Failed to load recent orders</p>';
+        }
+    } catch (error) {
+        console.error('Error loading recent orders:', error);
+        document.getElementById('recentOrders').innerHTML = 
+            '<p class="text-muted">Error loading recent orders</p>';
+    }
+}
+
+function displayRecentOrders(orders) {
+    const container = document.getElementById('recentOrders');
+    
+    if (!orders || orders.length === 0) {
+        container.innerHTML = '<p class="text-muted">No recent orders found</p>';
+        return;
+    }
+    
+    let html = `
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    orders.forEach(order => {
+        const statusClass = getStatusClass(order.order_status);
+        const formattedDate = new Date(order.order_date).toLocaleDateString();
+        
+        html += `
+            <tr>
+                <td><strong>${order.order_number}</strong></td>
+                <td>${order.customer_name}</td>
+                <td><span class="status-badge ${statusClass}">${order.order_status}</span></td>
+                <td>${order.total_amount_formatted}</td>
+                <td>${formattedDate}</td>
+            </tr>
+        `;
+    });
+    
+    html += `
+            </tbody>
+        </table>
+    `;
+    
+    container.innerHTML = html;
+}
+
+function getStatusClass(status) {
+    // Convert status to CSS class format: lowercase with hyphens
+    return 'status-' + status.toLowerCase().replace(/ /g, '-');
 }
 
 async function loadMeals() {
@@ -174,10 +249,37 @@ function filterMeals(keyword = "") {
     renderMeals(filtered);
 }
 
+async function loadMealCategories() {
+    const select = document.getElementById("mealCategory");
+    if (!select) return;
+
+    // Only reload if empty or in add mode
+    if (select.options.length > 1) return;
+
+    select.innerHTML = '<option value="">Select category</option>';
+
+    try {
+        const response = await apiCall("customer/get_meals.php?categories=true");
+        if (response && response.success && response.data) {
+            response.data.forEach((cat) => {
+                const option = document.createElement("option");
+                option.value = cat.category_id;
+                option.textContent = cat.category_name;
+                select.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error("Failed to load categories:", error);
+    }
+}
+
 async function openMealModal(mealId = null) {
     const modal = document.getElementById("mealModal");
     const form = document.getElementById("mealForm");
     const title = document.getElementById("mealModalTitle");
+    
+    // Load categories first
+    await loadMealCategories();
     
     // Reset form first
     form.reset();
@@ -1253,37 +1355,83 @@ async function deleteCategory(categoryId, categoryName) {
     }
 }
 
-// =========================================================================
-// MEALS MANAGEMENT
-// =========================================================================
-
-async function loadMeals() {
-    try {
-        const result = await apiCall('customer/get_meals.php?include_all=1', 'GET');
-        if (result.success) {
-            adminState.meals = result.data || [];
-            console.log(`Loaded ${adminState.meals.length} meals`);
-        }
-    } catch (error) {
-        console.error('Error loading meals:', error);
+function filterCategories() {
+    const searchInput = document.getElementById('categoriesSearchInput');
+    if (!searchInput) return;
+    
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const container = document.getElementById('categoriesTableBody');
+    if (!container) return;
+    
+    if (!adminState.categories || adminState.categories.length === 0) {
+        return;
     }
+    
+    if (!searchTerm) {
+        // Show all categories
+        renderCategories();
+        return;
+    }
+    
+    const filtered = adminState.categories.filter(cat => 
+        cat.category_name.toLowerCase().includes(searchTerm) ||
+        (cat.description || '').toLowerCase().includes(searchTerm)
+    );
+    
+    if (filtered.length === 0) {
+        container.innerHTML = '<tr><td colspan="5" class="text-center">No categories found matching "' + escapeHtml(searchTerm) + '"</td></tr>';
+        return;
+    }
+    
+    container.innerHTML = filtered.map(cat => `
+        <tr>
+            <td>${escapeHtml(cat.category_name)}</td>
+            <td>${escapeHtml(cat.description || '-')}</td>
+            <td><span class="badge ${cat.is_active ? 'badge-success' : 'badge-danger'}">${cat.is_active ? 'Active' : 'Inactive'}</span></td>
+            <td>${cat.display_order}</td>
+            <td class="actions">
+                <button class="btn-icon btn-secondary" onclick="editCategory(${cat.category_id})" title="Edit">✎</button>
+                <button class="btn-icon btn-danger" onclick="deleteCategory(${cat.category_id}, '${escapeHtml(cat.category_name)}')" title="Delete">🗑</button>
+            </td>
+        </tr>
+    `).join('');
 }
 
-// =========================================================================
-// USERS MANAGEMENT
-// =========================================================================
+// Expose category functions and utilities to window object
+window.loadCategories = loadCategories;
+window.renderCategories = renderCategories;
+window.openCategoryModal = openCategoryModal;
+window.closeCategoryModal = closeCategoryModal;
+window.submitCategoryForm = submitCategoryForm;
+window.deleteCategory = deleteCategory;
+window.editCategory = editCategory;
+window.filterCategories = filterCategories;
 
-async function loadUsers() {
-    try {
-        const result = await apiCall('admin/get_users.php', 'GET');
-        if (result.success) {
-            adminState.users = result.data || [];
-            console.log(`Loaded ${adminState.users.length} users`);
-        }
-    } catch (error) {
-        console.error('Error loading users:', error);
-    }
-}
+// Expose meal functions to window object
+window.loadMeals = loadMeals;
+window.renderMeals = renderMeals;
+window.openMealModal = openMealModal;
+window.closeMealModal = closeMealModal;
+window.submitMealForm = submitMealForm;
+window.deleteMeal = deleteMeal;
+window.filterMeals = filterMeals;
+window.loadMealCategories = loadMealCategories;
+window.updateMealStats = updateMealStats;
+window.handleMealImageChange = handleMealImageChange;
+
+// Expose user functions to window object
+window.loadUsers = loadUsers;
+window.renderUsers = renderUsers;
+window.openUserModal = openUserModal;
+window.closeUserModal = closeUserModal;
+window.submitUserForm = submitUserForm;
+window.deleteUser = deleteUser;
+window.editUser = editUser;
+window.filterUsers = filterUsers;
+window.filterByRole = filterByRole;
+
+window.escapeHtml = escapeHtml;
+window.adminState = adminState;
 
 // =========================================================================
 // UTILITIES

@@ -19,7 +19,7 @@ include '../templates/header.php';
                 <h1 class="page-title">Shopping Cart</h1>
                 <p class="page-subtitle">Review your items and complete your order</p>
             </div>
-            <a href="/aunt_joy/views/customer/menu.php" class="btn btn-secondary btn-icon-left">
+            <a href="/Aunt_Joy_Restaurant/views/customer/menu.php" class="btn btn-secondary btn-icon-left">
                 ← Continue Shopping
             </a>
         </div>
@@ -51,7 +51,7 @@ include '../templates/header.php';
                     <div class="empty-state-icon">🛒</div>
                     <h3 class="empty-state-title">Your cart is empty</h3>
                     <p class="empty-state-text">Add some delicious meals from our menu to get started</p>
-                    <a href="/aunt_joy/views/customer/menu.php" class="btn btn-primary btn-lg">
+                    <a href="/Aunt_Joy_Restaurant/views/customer/menu.php" class="btn btn-primary btn-lg">
                         Browse Menu
                     </a>
                 </div>
@@ -250,7 +250,7 @@ function renderCart() {
             <div class="cart-item-media">
                 <div class="item-image-wrapper">
                     ${item.image_url && item.image_url.trim() ? `
-                        <img src="/aunt_joy/${item.image_url}" alt="${item.meal_name}" class="item-image">
+                        <img src="/Aunt_Joy_Restaurant/${item.image_url}" alt="${item.meal_name}" class="item-image">
                     ` : `
                         <div class="item-image-placeholder">🍽️</div>
                     `}
@@ -458,7 +458,7 @@ async function checkout() {
     btn.disabled = true;
     
     try {
-        const response = await fetch('/aunt_joy/controllers/customer/place_order.php', {
+        const response = await fetch('/Aunt_Joy_Restaurant/controllers/customer/place_order.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
@@ -474,7 +474,7 @@ async function checkout() {
             }
             
             setTimeout(() => {
-                window.location.href = '/aunt_joy/views/customer/orders.php';
+                window.location.href = '/Aunt_Joy_Restaurant/views/customer/orders.php';
             }, 2000);
         } else {
             showNotification(result.message || 'Failed to place order', 'error');

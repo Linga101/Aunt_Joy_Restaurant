@@ -191,13 +191,67 @@ include '../templates/header.php';
 </div>
 
 <script>
-// Close modal when clicking outside
-window.onclick = function(event) {
-    const modal = document.getElementById('userModal');
-    if (event.target === modal) {
-        closeUserModal();
+// Initialize page when DOM loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Users page loaded");
+    
+    // Load users on page load
+    loadUsers();
+    
+    // Add search functionality
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            filterUsers(this.value);
+        });
     }
-}
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('userModal');
+        if (event.target === modal) {
+            closeUserModal();
+        }
+    });
+});
+
+// Override renderUsers to ensure proper rendering on this page
+const originalRenderUsers = window.renderUsers;
+window.renderUsers = function(users) {
+    const container = document.getElementById('usersTableBody');
+    if (!container) {
+        if (originalRenderUsers) {
+            originalRenderUsers(users || adminState.users || []);
+        }
+        return;
+    }
+    
+    if (!users || users.length === 0) {
+        container.innerHTML = '<tr><td colspan="7" class="text-center">No users found. Create one to get started.</td></tr>';
+        return;
+    }
+    
+    container.innerHTML = users.map(user => `
+        <tr>
+            <td>${user.user_id}</td>
+            <td>${escapeHtml(user.full_name)}</td>
+            <td>${escapeHtml(user.username)}</td>
+            <td>${escapeHtml(user.email)}</td>
+            <td>${escapeHtml(user.role_name)}</td>
+            <td>
+                <span class="status-badge ${user.is_active ? 'status-active' : 'status-inactive'}">
+                    ${user.is_active ? 'Active' : 'Inactive'}
+                </span>
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn-icon" onclick="editUser(${user.user_id})" title="Edit">✏️</button>
+                    <button class="btn-icon btn-danger" onclick="deleteUser(${user.user_id})" title="Delete">🗑️</button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+};
 </script>
 
 <?php include '../templates/footer.php'; ?>
