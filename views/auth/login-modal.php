@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../config/db.php';
 
 // Redirect if already logged in
 if (isLoggedIn()) {
-    echo json_encode(['redirect' => '/aunt_joy/index.php']);
+    echo json_encode(['redirect' => '/Aunt_Joy_Restaurant/index.php']);
     exit;
 }
 ?>
@@ -37,12 +37,12 @@ if (isLoggedIn()) {
     <div class="form-group">
         <div class="input-wrapper">
             <input 
-                type="email" 
-                id="email" 
-                name="email" 
-                placeholder="Email"
+                type="text" 
+                id="username" 
+                name="username" 
+                placeholder="Username or Email"
                 required
-                autocomplete="email"
+                autocomplete="username"
             >
         </div>
     </div>
@@ -85,3 +85,4 @@ if (isLoggedIn()) {
         New customer? <a href="#" onclick="switchAuthModal('register'); return false;">Create an account</a>
     </div>
 </form>
+

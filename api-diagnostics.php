@@ -78,13 +78,13 @@ include __DIR__ . '/views/templates/header.php';
     </div>
 
     <div style="text-align: center; margin-top: 2rem;">
-        <a href="/aunt_joy/views/admin/dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
+        <a href="/Aunt_Joy_Restaurant/views/admin/dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
     </div>
 </div>
 
 <script>
 async function testAPI(endpoint, method) {
-    const url = `/aunt_joy/controllers/${endpoint}`;
+    const url = `/Aunt_Joy_Restaurant/controllers/${endpoint}`;
     const logDiv = document.getElementById('responseLog');
     
     logDiv.innerHTML += `<p><strong>Testing ${method} ${endpoint}...</strong></p>`;
@@ -121,7 +121,7 @@ async function testAPI(endpoint, method) {
 }
 
 async function testSaveCategory() {
-    const url = `/aunt_joy/controllers/admin/save_category.php`;
+    const url = `/Aunt_Joy_Restaurant/controllers/admin/save_category.php`;
     const logDiv = document.getElementById('responseLog');
     
     logDiv.innerHTML += `<p><strong>Testing POST to save_category.php...</strong></p>`;
@@ -163,3 +163,4 @@ async function testSaveCategory() {
 </script>
 
 <?php include __DIR__ . '/views/templates/footer.php'; ?>
+

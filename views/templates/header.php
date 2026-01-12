@@ -26,19 +26,19 @@ require_once __DIR__ . '/../../config/db.php';
     </script>
 
     <!-- Base CSS -->
-    <link rel="stylesheet" href="/aunt_joy/assets/css/style.css">
+    <link rel="stylesheet" href="/Aunt_Joy_Restaurant/assets/css/style.css">
     
     <!-- Page-specific CSS -->
     <?php if(isset($customCSS)): ?>
-        <link rel="stylesheet" href="/aunt_joy/assets/css/<?php echo $customCSS; ?>">
+        <link rel="stylesheet" href="/Aunt_Joy_Restaurant/assets/css/<?php echo $customCSS; ?>">
     <?php endif; ?>
     
     <!-- Base JavaScript -->
-    <script src="/aunt_joy/assets/js/main.js" defer></script>
+    <script src="/Aunt_Joy_Restaurant/assets/js/main.js" defer></script>
     
     <!-- Page-specific JavaScript -->
     <?php if(isset($customJS)): ?>
-        <script src="/aunt_joy/assets/js/<?php echo $customJS; ?>" defer></script>
+        <script src="/Aunt_Joy_Restaurant/assets/js/<?php echo $customJS; ?>" defer></script>
     <?php endif; ?>
 
     <?php
@@ -47,8 +47,8 @@ require_once __DIR__ . '/../../config/db.php';
         $currentUserId = getCurrentUserId();
         $displayName = $_SESSION['full_name'] ?? null;
         $cartUrl = ($isLoggedIn && $currentRole === 'Customer')
-            ? '/aunt_joy/views/customer/cart.php'
-            : '/aunt_joy/views/auth/login.php?next=cart';
+            ? '/Aunt_Joy_Restaurant/views/customer/cart.php'
+            : '/Aunt_Joy_Restaurant/index.php?next=cart';
     ?>
 
     <script>
@@ -67,7 +67,7 @@ require_once __DIR__ . '/../../config/db.php';
     <nav class="main-nav">
         <div class="nav-container">
             <div class="nav-brand">
-                <a href="/aunt_joy/index.php">
+                <a href="/Aunt_Joy_Restaurant/index.php">
                     <span class="logo-icon">🍽️</span>
                     <span class="logo-text">Aunt Joy's</span>
                 </a>
@@ -75,9 +75,9 @@ require_once __DIR__ . '/../../config/db.php';
             
             <div class="nav-menu">
                 <div class="nav-links">
-                    <a href="/aunt_joy/index.php#hero" class="nav-link">Home</a>
-                    <a href="/aunt_joy/views/customer/menu.php" class="nav-link">Menu</a>
-                    <a href="/aunt_joy/index.php#contact" class="nav-link">Contact</a>
+                    <a href="/Aunt_Joy_Restaurant/index.php#hero" class="nav-link">Home</a>
+                    <a href="/Aunt_Joy_Restaurant/views/customer/menu.php" class="nav-link">Menu</a>
+                    <a href="/Aunt_Joy_Restaurant/index.php#contact" class="nav-link">Contact</a>
                 </div>
 
                 <div class="nav-actions">
@@ -96,10 +96,16 @@ require_once __DIR__ . '/../../config/db.php';
                                 <small><?php echo $currentRole ?? 'Customer'; ?></small>
                             </div>
                         </div>
-                        <a href="/aunt_joy/controllers/auth/logout.php" class="btn btn-secondary nav-auth-btn">Logout</a>
+                        <a href="/Aunt_Joy_Restaurant/controllers/auth/logout.php" class="btn btn-secondary nav-auth-btn">Logout</a>
                     <?php else: ?>
-                        <a href="#" class="nav-link" onclick="openAuthModal('login'); return false;">Login</a>
-                        <a href="#" class="btn btn-primary nav-auth-btn" onclick="openAuthModal('register'); return false;">Sign Up</a>
+                        <?php $isIndexPage = basename($_SERVER['PHP_SELF']) === 'index.php'; ?>
+                        <?php if ($isIndexPage): ?>
+                            <a href="#" class="nav-link" onclick="openAuthModal('login'); return false;">Login</a>
+                            <a href="#" class="btn btn-primary nav-auth-btn" onclick="openAuthModal('register'); return false;">Sign Up</a>
+                        <?php else: ?>
+                            <a href="/Aunt_Joy_Restaurant/index.php" class="nav-link">Login</a>
+                            <a href="/Aunt_Joy_Restaurant/index.php" class="btn btn-primary nav-auth-btn">Sign Up</a>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </div>

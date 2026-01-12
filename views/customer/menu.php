@@ -19,14 +19,14 @@ $isCustomer = isLoggedIn() && getCurrentUserRole() === 'Customer';
                 <button
                     id="menuCartButton"
                     class="cart-button"
-                    data-target="/aunt_joy/views/customer/cart.php"
+                    data-target="/Aunt_Joy_Restaurant/views/customer/cart.php"
                     data-locked="false"
                     data-auth-message="Login to manage your cart."
                 >
                     🛒 Cart (<span id="cartCount">0</span>)
                 </button>
                 <?php if (isLoggedIn()): ?>
-                    <a href="/aunt_joy/views/customer/orders.php" class="btn btn-secondary">My Orders</a>
+                    <a href="/Aunt_Joy_Restaurant/views/customer/orders.php" class="btn btn-secondary">My Orders</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -121,7 +121,7 @@ const resolveImagePath = (path = '') => {
     if (!path) return null;
     if (path.startsWith('http')) return path;
     if (path.startsWith('/')) return path;
-    return `/aunt_joy/${path.replace(/^\/+/, '')}`;
+    return `/Aunt_Joy_Restaurant/${path.replace(/^\/+/, '')}`;
 };
 
 // Load categories and meals on page load
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 // Load categories
 async function loadCategories() {
     try {
-        const response = await fetch('/aunt_joy/controllers/customer/get_meals.php?categories=true');
+        const response = await fetch('/Aunt_Joy_Restaurant/controllers/customer/get_meals.php?categories=true');
         const data = await response.json();
         
         if (data.success) {
@@ -178,7 +178,7 @@ async function loadMeals(categoryId = null, search = null) {
     document.getElementById('emptyState').style.display = 'none';
     
     try {
-        let url = '/aunt_joy/controllers/customer/get_meals.php';
+        let url = '/Aunt_Joy_Restaurant/controllers/customer/get_meals.php';
         const params = new URLSearchParams();
         
         if (categoryId) params.append('category_id', categoryId);
@@ -298,7 +298,7 @@ function guardMenuCartButton() {
     if (!cartButton) return;
     cartButton.addEventListener('click', () => {
         const requiresAuth = cartButton.dataset.locked === 'true';
-        const target = cartButton.dataset.target || '/aunt_joy/views/customer/cart.php';
+        const target = cartButton.dataset.target || '/Aunt_Joy_Restaurant/views/customer/cart.php';
         if (requiresAuth) {
             showNotification(cartButton.dataset.authMessage || 'Login to manage your cart.', 'info');
             setTimeout(() => openAuthModal('login'), 300);

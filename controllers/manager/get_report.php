@@ -52,7 +52,7 @@ try {
             'year' => $year
         ]);
         
-        $summary = $summaryStmt->fetch();
+        $summary = $summaryStmt->fetch() ?: [];
         
         // Get best selling items
         $bestSellersStmt = $db->prepare("
