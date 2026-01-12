@@ -88,11 +88,6 @@ function removeFromCart(index) {
     window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { cart } }));
 }
 
-/**
- * Update cart item quantity
- * @param {number} index - Item index
- * @param {number} change - Quantity change (+1 or -1)
- */
 function updateQuantity(index, change) {
     const cart = getCart();
     if (cart[index]) {
@@ -100,11 +95,6 @@ function updateQuantity(index, change) {
         
         if (cart[index].quantity < 1) {
             cart[index].quantity = 1;
-        }
-        
-        if (cart[index].quantity > 10) {
-            cart[index].quantity = 10;
-            showNotification('Maximum quantity is 10 per item', 'warning');
         }
         
         saveCart(cart);
