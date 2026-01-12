@@ -314,11 +314,6 @@ function updateQuantity(index, change) {
                 return; // Don't go below 1
             }
             
-            if (cart[index].quantity > 10) {
-                showNotification('Maximum quantity is 10 per item', 'warning');
-                cart[index].quantity = 10;
-            }
-            
             saveCart(cart);
             renderCart();
             updateSummary();
