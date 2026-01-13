@@ -14,6 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // Get input data
 $data = json_decode(file_get_contents('php://input'), true);
 
+// Log login attempt for security monitoring
+logSecurity("Login attempt initiated", [
+    'email' => $data['email'] ?? 'not_provided',
+    'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+    'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
+]);
+
 // Validate required fields
 if (empty($data['email']) || empty($data['password'])) {
     jsonResponse(false, null, 'Email and password are required');
@@ -40,9 +47,14 @@ try {
     $user = $stmt->fetch();
     
     // Check if user exists and password is correct
-    if (!$user || !verifyPassword($password, $user['password_hash'])) {
-        jsonResponse(false, null, 'Invalid email or password');
-    }
+if (!$user || !verifyPassword($password, $user['password_hash'])) {
+    logSecurity("Login attempt failed", [
+        'email' => $email,
+        'reason' => 'Invalid credentials',
+        'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+    ]);
+    jsonResponse(false, null, 'Invalid email or password');
+}
     
     // Update last login
     $updateStmt = $db->prepare("
@@ -61,6 +73,15 @@ try {
     
     // Remove sensitive data
     unset($user['password_hash']);
+    
+    // Log successful login
+    logSecurity("User logged in successfully", [
+        'user_id' => $user['user_id'],
+        'email' => $user['email'],
+        'full_name' => $user['full_name'],
+        'role' => $user['role_name'],
+        'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+    ]);
     
     // Return success with user data
     jsonResponse(true, $user, 'Login successful');

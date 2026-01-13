@@ -52,12 +52,58 @@ body.customer-page {
 }
 
 /* ==========================================================================
-   Shopping Cart Page - Enhanced Styling
+   Cart Page - Enhanced Styling
    ========================================================================== */
-.cart-page .container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 3rem;
+.cart-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.cart-notice {
+    background: linear-gradient(135deg, rgba(3, 169, 244, 0.1), rgba(59, 130, 246, 0.1));
+    border: 1px solid rgba(3, 169, 244, 0.3);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.notice-icon {
+    font-size: 3rem;
+    flex-shrink: 0;
+}
+
+.notice-content {
+    flex: 1;
+}
+
+.notice-content strong {
+    color: var(--primary);
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.notice-content p {
+    margin: 0 0 1rem 0;
+    color: var(--dark);
+    line-height: 1.5;
+}
+
+.notice-content .btn {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.guest-checkout-text {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--muted);
 }
 
 .cart-page-header {

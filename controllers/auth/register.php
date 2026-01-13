@@ -14,6 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // Get input data
 $data = json_decode(file_get_contents('php://input'), true);
 
+// Log registration attempt
+logSecurity("User registration attempt", [
+    'email' => $data['email'] ?? 'not_provided',
+    'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+]);
+
 // Validate required fields
 $required = ['email', 'password', 'full_name'];
 foreach ($required as $field) {
@@ -23,6 +29,7 @@ foreach ($required as $field) {
 }
 
 // Sanitize inputs
+$username = sanitize($data['username'] ?? $data['email']); // Use email as username if not provided
 $email = sanitize($data['email']);
 $full_name = sanitize($data['full_name']);
 $phone = sanitize($data['phone_number'] ?? '');
@@ -53,11 +60,12 @@ try {
     
     // Insert new user (role_id = 1 for Customer)
     $stmt = $db->prepare("
-        INSERT INTO users (role_id, email, password_hash, full_name, phone_number)
-        VALUES (1, :email, :password_hash, :full_name, :phone_number)
+        INSERT INTO users (role_id, username, email, password_hash, full_name, phone_number)
+        VALUES (1, :username, :email, :password_hash, :full_name, :phone_number)
     ");
     
     $stmt->execute([
+        'username' => $username,
         'email' => $email,
         'password_hash' => $passwordHash,
         'full_name' => $full_name,
@@ -68,13 +76,24 @@ try {
     
     // Auto-login after registration
     $_SESSION['user_id'] = $userId;
+    $_SESSION['username'] = $username;
     $_SESSION['email'] = $email;
     $_SESSION['full_name'] = $full_name;
     $_SESSION['role_id'] = 1;
     $_SESSION['role_name'] = 'Customer';
     
+    // Log successful registration
+    logSecurity("User registered successfully", [
+        'user_id' => $userId,
+        'username' => $username,
+        'email' => $email,
+        'full_name' => $full_name,
+        'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+    ]);
+    
     jsonResponse(true, [
         'user_id' => $userId,
+        'username' => $username,
         'email' => $email,
         'full_name' => $full_name
     ], 'Registration successful');

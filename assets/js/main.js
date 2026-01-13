@@ -375,7 +375,9 @@ function applyTheme(theme) {
     try {
         localStorage.setItem('auntJoyTheme', normalized);
     } catch (error) {
+        console.error('Error loading auth form:', error);
         console.warn('Unable to persist theme', error);
+        logClientError('Auth modal loading failed', error, { component: 'auth_modal' });
     }
     const toggle = document.getElementById('themeToggle');
     if (toggle) {
@@ -499,6 +501,33 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+/**
+ * Log client errors to server
+ * @param {string} message - Error message
+ * @param {Object} error - Error object
+ * @param {Object} context - Additional context
+ */
+function logClientError(message, error = null, context = {}) {
+    const errorData = {
+        message,
+        error: error?.stack || error?.message,
+        context,
+        url: window.location.href,
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString()
+    };
+    
+    // Send error to server for logging
+    fetch('/aunt_joy/controllers/log_client_error.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(errorData)
+    }).catch(() => {
+        // Fallback to console if server logging fails
+        console.error('Client error (failed to log to server):', errorData);
+    });
+}
 
 // Add CSS animations
 const style = document.createElement('style');
@@ -712,6 +741,7 @@ async function submitLoginForm() {
         }
     } catch (error) {
         console.error('Login error:', error);
+        logClientError('Login failed', error, { component: 'auth_modal' });
         showNotification('An error occurred. Please try again.', 'error');
     }
 }

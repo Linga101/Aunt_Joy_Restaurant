@@ -282,7 +282,7 @@ function setupEventListeners() {
         btn.addEventListener('click', function() {
             document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
-            
+           
             const grid = document.getElementById('mealsGrid');
             if (this.dataset.view === 'list') {
                 grid.classList.add('list-view');
@@ -291,6 +291,53 @@ function setupEventListeners() {
             }
         });
     });
+    
+    // Add to cart buttons (using event delegation)
+    const mealsGrid = document.getElementById('mealsGrid');
+    if (mealsGrid) {
+        mealsGrid.addEventListener('click', async function(e) {
+            // Check if clicked element is an "Add to Cart" button
+            const cartBtn = e.target.closest('.add-to-cart-btn');
+            if (cartBtn) {
+                e.preventDefault();
+                
+                const mealId = parseInt(cartBtn.dataset.mealId);
+                const mealName = decodeURIComponent(cartBtn.dataset.mealName);
+                const price = parseFloat(cartBtn.dataset.price);
+                const image = cartBtn.dataset.image || '';
+                
+                console.log('Adding to cart:', { mealId, mealName, price, image });
+                
+                // Add loading state to button
+                const originalText = cartBtn.innerHTML;
+                cartBtn.disabled = true;
+                cartBtn.innerHTML = 'Adding...';
+                
+                // Guests can add items to cart, but must login to checkout
+                console.log('Adding to cart - guest or customer allowed');
+                
+                // Call addToCart from cart.js (async function)
+                try {
+                    if (typeof addToCart === 'function') {
+                        await addToCart(mealId, mealName, price, image, 1);
+                        // Restore button on success
+                        cartBtn.disabled = false;
+                        cartBtn.innerHTML = originalText;
+                    } else {
+                        console.error('addToCart function not available');
+                        showNotification('Cart functionality not available', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error adding to cart:', error);
+                    showNotification('Failed to add to cart', 'error');
+                } finally {
+                    // Always restore button state
+                    cartBtn.disabled = false;
+                    cartBtn.innerHTML = originalText;
+                }
+            }
+        });
+    }
 }
 
 function guardMenuCartButton() {

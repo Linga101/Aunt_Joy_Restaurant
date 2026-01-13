@@ -182,7 +182,7 @@ function getUserById($userId) {
         
         $stmt->execute([$userId]);
         return $stmt->fetch();
-    } catch (Exception $e) {
+    } catch (Exception) {
         return false;
     }
 }
@@ -225,7 +225,7 @@ function getAllUsers($roleId = null, $isActive = null) {
         $stmt->execute($params);
         
         return $stmt->fetchAll();
-    } catch (Exception $e) {
+} catch (Exception) {
         return [];
     }
 }
@@ -374,7 +374,7 @@ function getMealById($mealId) {
         
         $stmt->execute([$mealId]);
         return $stmt->fetch();
-    } catch (Exception $e) {
+    } catch (Exception) {
         return false;
     }
 }
@@ -424,7 +424,7 @@ function getAllMeals($categoryId = null, $isAvailable = null, $isFeatured = null
         $stmt->execute($params);
         
         return $stmt->fetchAll();
-    } catch (Exception $e) {
+} catch (Exception) {
         return [];
     }
 }
@@ -558,7 +558,7 @@ function getOrderById($orderId) {
         $order['items'] = $itemStmt->fetchAll();
         
         return $order;
-    } catch (Exception $e) {
+    } catch (Exception) {
         return false;
     }
 }
@@ -595,7 +595,7 @@ function getCustomerOrders($customerId, $status = null) {
         $stmt->execute($params);
         
         return $stmt->fetchAll();
-    } catch (Exception $e) {
+} catch (Exception) {
         return [];
     }
 }
@@ -676,7 +676,7 @@ function getAllOrders($status = null, $limit = null, $offset = null) {
         $stmt->execute($params);
         
         return $stmt->fetchAll();
-    } catch (Exception $e) {
+} catch (Exception) {
         return [];
     }
 }
@@ -703,7 +703,7 @@ function getAllCategories() {
         
         $stmt->execute();
         return $stmt->fetchAll();
-    } catch (Exception $e) {
+} catch (Exception) {
         return [];
     }
 }
@@ -725,7 +725,7 @@ function getCategoryById($categoryId) {
         
         $stmt->execute([$categoryId]);
         return $stmt->fetch();
-    } catch (Exception $e) {
+    } catch (Exception) {
         return false;
     }
 }
@@ -760,7 +760,7 @@ function getSalesReport($startDate, $endDate) {
         
         $stmt->execute([$startDate, $endDate]);
         return $stmt->fetchAll();
-    } catch (Exception $e) {
+} catch (Exception) {
         return [];
     }
 }
@@ -789,7 +789,7 @@ function getTopSellingMeals($limit = 10) {
         
         $stmt->execute([$limit]);
         return $stmt->fetchAll();
-    } catch (Exception $e) {
+} catch (Exception) {
         return [];
     }
 }
@@ -813,7 +813,7 @@ function getOrderStatistics() {
         
         $stmt->execute();
         return $stmt->fetch();
-    } catch (Exception $e) {
+} catch (Exception) {
         return [];
     }
 }

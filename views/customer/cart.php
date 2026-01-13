@@ -17,8 +17,27 @@ include '../templates/header.php';
         <div class="cart-page-header">
             <div class="header-content">
                 <h1 class="page-title">Shopping Cart</h1>
-                <p class="page-subtitle">Review your items and complete your order</p>
+                <p class="page-subtitle">Review your items before checkout</p>
             </div>
+            <a href="/aunt_joy/views/customer/menu.php" class="btn btn-secondary btn-icon-right">
+                Continue Shopping
+            </a>
+        </div>
+        
+        <!-- Guest Notice -->
+        <div id="guestNotice" class="cart-notice" style="display: none;">
+            <div class="notice-icon">👤</div>
+            <div class="notice-content">
+                <strong>Shopping as Guest</strong>
+                <p>You can add items to cart as a guest, but you'll need to log in or create an account to complete your order.</p>
+                <button class="btn btn-primary btn-sm" onclick="openAuthModal('login')">
+                    Log In to Checkout
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="openAuthModal('register')">
+                    Create Account
+                </button>
+            </div>
+        </div>
             <a href="/aunt_joy/views/customer/menu.php" class="btn btn-secondary btn-icon-left">
                 ← Continue Shopping
             </a>
@@ -159,6 +178,10 @@ include '../templates/header.php';
                         🛍️ Place Order
                     </button>
                     
+                    <p class="guest-checkout-text">
+                        <span id="checkoutHelper">Log in to complete your order</span>
+                    </p>
+                    
                     <div class="security-badge">
                         <span class="security-icon">🔒</span>
                         <span class="security-text">Secure Checkout</span>
@@ -182,6 +205,25 @@ let discountAmount = 0;
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize cart count for guests
     updateCartCount();
+    
+    // Show guest notice if not logged in
+    const guestNotice = document.getElementById('guestNotice');
+    const checkoutHelper = document.getElementById('checkoutHelper');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    
+    if (guestNotice && checkoutHelper && checkoutBtn) {
+        if (!window.AUNT_JOY?.isLoggedIn) {
+            guestNotice.style.display = 'block';
+            checkoutHelper.textContent = 'Log in to complete your order';
+            checkoutBtn.textContent = '🔓 Log In to Checkout';
+            checkoutBtn.onclick = () => openAuthModal('login');
+        } else {
+            guestNotice.style.display = 'none';
+            checkoutHelper.textContent = 'Ready to place your order';
+            checkoutBtn.textContent = '🛍️ Place Order';
+            checkoutBtn.onclick = checkout;
+        }
+    }
     
     renderCart();
     updateSummary();

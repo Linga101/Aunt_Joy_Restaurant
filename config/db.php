@@ -4,6 +4,9 @@
  * Central database connection and helper functions
  */
 
+// Include logging system
+require_once __DIR__ . '/logger.php';
+
 // Database credentials
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'aunt_joys_restaurant');
@@ -30,9 +33,17 @@ function getDB() {
                 ]
             );
         } catch(PDOException $e) {
+            logError("Database connection failed", [
+                'host' => DB_HOST,
+                'database' => DB_NAME,
+                'error' => $e->getMessage(),
+                'file' => __FILE__,
+                'line' => __LINE__
+            ]);
+            
             die(json_encode([
                 'success' => false,
-                'message' => 'Database connection failed: ' . $e->getMessage()
+                'message' => 'Database connection failed'
             ]));
         }
     }

@@ -215,14 +215,20 @@ function filterOrders(status) {
 
 // View order details
 async function viewOrderDetails(orderId) {
+    console.log('Loading details for order:', orderId);
+    
     try {
         const response = await fetch(`/aunt_joy/controllers/customer/get_orders.php?order_id=${orderId}`);
+        console.log('Response status:', response.status);
+        
         const result = await response.json();
+        console.log('Response data:', result);
         
         if (result.success) {
             showOrderModal(result.data);
         } else {
-            showNotification('Failed to load order details', 'error');
+            console.error('Error from server:', result.message);
+            showNotification(result.message || 'Failed to load order details', 'error');
         }
     } catch (error) {
         console.error('Error loading order details:', error);
@@ -232,8 +238,24 @@ async function viewOrderDetails(orderId) {
 
 // Show order modal
 function showOrderModal(order) {
+    console.log('Showing order modal for:', order);
+    
     const modal = document.getElementById('orderModal');
     const body = document.getElementById('orderModalBody');
+    
+    if (!modal || !body) {
+        console.error('Modal elements not found');
+        showNotification('Modal error - please refresh page', 'error');
+        return;
+    }
+    
+    // Format currency if not already formatted
+    const formatAmount = (amount) => {
+        if (typeof amount === 'string' && amount.includes('MK')) {
+            return amount;
+        }
+        return 'MK ' + parseFloat(amount || 0).toFixed(2);
+    };
     
     body.innerHTML = `
         <h2>Order Details</h2>
@@ -258,15 +280,15 @@ function showOrderModal(order) {
         <div class="details-section">
             <h4>Order Items</h4>
             <div class="order-items-list">
-                ${order.items.map(item => `
+                ${order.items ? order.items.map(item => `
                     <div class="order-item-detail">
                         <div>
                             <strong>${item.meal_name}</strong>
                             <span class="text-muted">× ${item.quantity}</span>
                         </div>
-                        <span>MK ${item.subtotal.toFixed(2)}</span>
+                        <span>${formatAmount(item.subtotal)}</span>
                     </div>
-                `).join('')}
+                `).join('') : '<p>No items found</p>'}
             </div>
         </div>
         
@@ -274,27 +296,28 @@ function showOrderModal(order) {
             <div class="order-summary-detail">
                 <div class="summary-row">
                     <span>Subtotal</span>
-                    <span>${order.subtotal_formatted}</span>
+                    <span>${formatAmount(order.subtotal_formatted || order.subtotal)}</span>
                 </div>
                 <div class="summary-row">
                     <span>Delivery Fee</span>
-                    <span>${order.delivery_fee_formatted}</span>
+                    <span>${formatAmount(order.delivery_fee_formatted || order.delivery_fee)}</span>
                 </div>
                 ${order.discount_amount > 0 ? `
                     <div class="summary-row">
                         <span>Discount</span>
-                        <span class="text-success">-${order.discount_amount_formatted}</span>
+                        <span class="text-success">-${formatAmount(order.discount_amount_formatted || order.discount_amount)}</span>
                     </div>
                 ` : ''}
                 <div class="summary-row total">
                     <span>Total</span>
-                    <span>${order.total_amount_formatted}</span>
+                    <span>${formatAmount(order.total_amount_formatted || order.total_amount)}</span>
                 </div>
             </div>
         </div>
     `;
     
     modal.style.display = 'block';
+    console.log('Modal displayed successfully');
 }
 
 // Close order modal

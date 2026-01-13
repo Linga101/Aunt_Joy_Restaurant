@@ -15,5 +15,5 @@ session_start();
 $_SESSION['logout_message'] = 'You have been successfully logged out';
 
 // Redirect to login page
-redirect('/aunt_joy/views/auth/login.php');
+redirect('/aunt_joy/views/auth/login-modal.php');
 ?>

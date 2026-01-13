@@ -1,0 +1,340 @@
+-- ---------------------------------------------------------------------------
+-- Aunt Joy's Restaurant - Database Seeders with Inventory Management
+-- Creates test data for all interfaces (Customer, Admin, Sales, Manager)
+-- Includes realistic inventory levels and stock tracking
+-- ---------------------------------------------------------------------------
+
+USE aunt_joys_restaurant;
+
+-- ---------------------------------------------------------------------------
+-- Test Users for Different Roles
+-- All passwords are: password123
+-- ---------------------------------------------------------------------------
+
+-- Test Customers
+INSERT INTO users (role_id, username, email, password_hash, full_name, phone_number) VALUES
+(1, 'jchikwanda', 'joyce.chikwanda@email.com', '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC', 'Joyce Chikwanda', '+265 991 234 567'),
+(1, 'mphiri', 'mphiri@email.com', '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC', 'Michael Phiri', '+265 992 345 678'),
+(1, 'mbanda', 'angela.mbanda@email.com', '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC', 'Angela Banda', '+265 993 456 789'),
+(1, 'kaziwe', 'samuel.kaziwe@email.com', '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC', 'Samuel Kaziwe', '+265 994 567 890')
+ON DUPLICATE KEY UPDATE email = VALUES(email);
+
+-- Test Administrators
+INSERT INTO users (role_id, username, email, password_hash, full_name, phone_number) VALUES
+(2, 'admin', 'admin@auntjoy.test', '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC', 'System Administrator', '+265 999 000 000'),
+(2, 'jadmin', 'joyce.admin@auntjoy.test', '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC', 'Joyce Admin', '+265 888 111 111')
+ON DUPLICATE KEY UPDATE email = VALUES(email);
+
+-- Test Sales Personnel
+INSERT INTO users (role_id, username, email, password_hash, full_name, phone_number) VALUES
+(3, 'jsales', 'john.sales@auntjoy.test', '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC', 'John Sales', '+265 888 222 222'),
+(3, 'msales', 'mary.sales@auntjoy.test', '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC', 'Mary Sales', '+265 888 333 333')
+ON DUPLICATE KEY UPDATE email = VALUES(email);
+
+-- Test Managers
+INSERT INTO users (role_id, username, email, password_hash, full_name, phone_number) VALUES
+(4, 'jmanager', 'james.manager@auntjoy.test', '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC', 'James Manager', '+265 888 444 444'),
+(4, 'smanager', 'sarah.manager@auntjoy.test', '$2y$10$1CE1rFJ0ZnIcXtNCmieYGO/vpGt8aV.SvtTDHkJ/xZ4wNG0Ax7AnC', 'Sarah Manager', '+265 888 555 555')
+ON DUPLICATE KEY UPDATE email = VALUES(email);
+
+-- ---------------------------------------------------------------------------
+-- Additional Test Meals (for variety in testing)
+-- ---------------------------------------------------------------------------
+
+INSERT INTO meals (category_id, meal_name, meal_description, price, image_url, is_featured, is_available, min_stock_level, max_stock_level, track_inventory, created_by) VALUES
+(1, 'Chambo & Nsima', 'Fresh Lake Malawi chambo grilled to perfection served with traditional nsima and pumpkin leaves', 7200, 'assets/images/uploads/meals/chambo-nsima.jpg', 1, 1, 5, 25, 1, 1),
+(2, 'Mixed Grill Platter', 'Assorted grilled meats including chicken, beef, and sausages with peri-peri sauces', 8500, 'assets/images/uploads/meals/mixed-grill.jpg', 1, 1, 3, 15, 1, 1),
+(3, 'Mango Avocado Salad', 'Fresh local mango, avocado, mixed greens with citrus vinaigrette', 3800, 'assets/images/uploads/meals/mango-salad.jpg', 0, 1, 8, 40, 1, 1),
+(4, 'Chocolate Lava Cake', 'Warm chocolate cake with molten center served with vanilla ice cream', 4800, 'assets/images/uploads/meals/chocolate-lava.jpg', 1, 1, 6, 30, 1, 1),
+(5, 'Samosa Platter', 'Assorted vegetable and meat samosas with tamarind chutney', 3500, 'assets/images/uploads/meals/samosas.jpg', 0, 1, 10, 50, 1, 1),
+(6, 'Fresh Lemonade', 'Freshly squeezed lemonade with mint leaves', 2000, 'assets/images/uploads/meals/lemonade.jpg', 0, 1, 20, 100, 1, 1)
+ON DUPLICATE KEY UPDATE meal_name = VALUES(meal_name);
+
+-- ---------------------------------------------------------------------------
+-- Meal Inventory - Realistic Stock Levels
+-- ---------------------------------------------------------------------------
+
+INSERT INTO meal_inventory (meal_id, current_stock, last_restocked, updated_by) VALUES
+-- High stock items (popular meals)
+(1, 35, '2025-12-17 08:00:00', 1),  -- Nsima & Beef Stew
+(2, 28, '2025-12-17 08:00:00', 1),  -- Peri-Peri Chicken
+(8, 45, '2025-12-17 08:00:00', 1),  -- Tamarind Glazed Wings
+
+-- Medium stock items
+(3, 18, '2025-12-17 08:00:00', 1),  -- Veggie Power Bowl
+(4, 22, '2025-12-17 08:00:00', 1),  -- Classic Cheeseburger
+(6, 12, '2025-12-17 08:00:00', 1),  -- Grilled Chambo
+(9, 15, '2025-12-17 08:00:00', 1),  -- Chambo & Nsima
+(11, 25, '2025-12-17 08:00:00', 1), -- Samosa Platter
+(12, 60, '2025-12-17 08:00:00', 1), -- Fresh Lemonade
+
+-- Low stock items (need restocking)
+(5, 4, '2025-12-16 14:00:00', 1),   -- Coconut Cream Cake (below min stock of 8)
+(7, 12, '2025-12-17 08:00:00', 1),  -- Butternut Ginger Soup
+(10, 2, '2025-12-16 10:00:00', 1),  -- Mixed Grill Platter (below min stock of 3)
+
+-- Out of stock items
+(13, 0, '2025-12-15 18:00:00', 1),  -- Mango Avocado Salad (completely out)
+(14, 0, '2025-12-16 12:00:00', 1)   -- Chocolate Lava Cake (completely out)
+ON DUPLICATE KEY UPDATE 
+    current_stock = VALUES(current_stock),
+    last_restocked = VALUES(last_restocked);
+
+-- ---------------------------------------------------------------------------
+-- Inventory Transactions - Sample Transaction History
+-- ---------------------------------------------------------------------------
+
+INSERT INTO inventory_transactions (meal_id, transaction_type, quantity, quantity_before, quantity_after, unit_cost, reference_id, reference_type, notes, created_by, created_at) VALUES
+-- Recent restocks
+(1, 'RESTOCK', 20, 15, 35, 2800, NULL, NULL, 'Daily restock from supplier', 1, '2025-12-17 08:00:00'),
+(2, 'RESTOCK', 15, 13, 28, 5200, NULL, NULL, 'Fresh chicken delivery', 1, '2025-12-17 08:00:00'),
+(8, 'RESTOCK', 30, 15, 45, 2700, NULL, NULL, 'Wings stock replenished', 1, '2025-12-17 08:00:00'),
+
+-- Sales from today
+(1, 'SALE', -2, 37, 35, 3500, 1, 'order', 'Order AJ-2025-001', 1, '2025-12-17 10:30:00'),
+(2, 'SALE', -1, 29, 28, 6500, 2, 'order', 'Order AJ-2025-002', 1, '2025-12-17 11:45:00'),
+(3, 'SALE', -1, 19, 18, 5200, 3, 'order', 'Order AJ-2025-003', 1, '2025-12-17 09:15:00'),
+
+-- Waste/Adjustments
+(5, 'WASTE', -2, 6, 4, 4200, NULL, NULL, 'Expired items discarded', 1, '2025-12-16 14:00:00'),
+(10, 'ADJUSTMENT', -1, 3, 2, 8500, NULL, NULL, 'Inventory count adjustment', 1, '2025-12-16 10:00:00'),
+(13, 'SALE', -5, 5, 0, 3800, 6, 'order', 'Last stock sold out', 1, '2025-12-15 18:00:00'),
+
+-- Previous day transactions
+(4, 'SALE', -3, 25, 22, 4800, 5, 'order', 'Order AJ-2025-005', 1, '2025-12-16 19:00:00'),
+(6, 'SALE', -2, 14, 12, 6800, 8, 'order', 'Order AJ-2025-008', 1, '2025-12-15 20:00:00')
+ON DUPLICATE KEY UPDATE quantity = VALUES(quantity);
+
+-- ---------------------------------------------------------------------------
+-- Update Meal Availability Based on Stock
+-- ---------------------------------------------------------------------------
+
+-- Set meals as unavailable if out of stock and track_inventory = 1
+UPDATE meals m 
+SET is_available = 0 
+WHERE EXISTS (
+    SELECT 1 FROM meal_inventory mi 
+    WHERE mi.meal_id = m.meal_id 
+    AND mi.current_stock = 0 
+    AND m.track_inventory = 1
+);
+
+-- Set meals as available if they have stock
+UPDATE meals m 
+SET is_available = 1 
+WHERE EXISTS (
+    SELECT 1 FROM meal_inventory mi 
+    WHERE mi.meal_id = m.meal_id 
+    AND mi.current_stock > 0 
+    AND m.track_inventory = 1
+);
+
+-- ---------------------------------------------------------------------------
+-- Sample Orders with Different Statuses
+-- ---------------------------------------------------------------------------
+
+-- Get user IDs for reference (assuming they exist from previous insert)
+SET @customer1 = (SELECT user_id FROM users WHERE email = 'joyce.chikwanda@email.com' LIMIT 1);
+SET @customer2 = (SELECT user_id FROM users WHERE email = 'mphiri@email.com' LIMIT 1);
+SET @customer3 = (SELECT user_id FROM users WHERE email = 'angela.mbanda@email.com' LIMIT 1);
+SET @customer4 = (SELECT user_id FROM users WHERE email = 'samuel.kaziwe@email.com' LIMIT 1);
+SET @sales1 = (SELECT user_id FROM users WHERE email = 'john.sales@auntjoy.test' LIMIT 1);
+SET @sales2 = (SELECT user_id FROM users WHERE email = 'mary.sales@auntjoy.test' LIMIT 1);
+
+-- Sample Orders
+INSERT INTO orders (order_number, customer_id, delivery_address, contact_number, special_instructions, subtotal, delivery_fee, total_amount, order_status, payment_status, processed_by, order_date, delivered_at) VALUES
+-- Pending Orders
+('AJ-2025-001', @customer1, 'Area 43, House 123, Lilongwe', '+265 991 234 567', 'Extra chili sauce please', 13000, 1500, 14500, 'Pending', 'Pending', @sales1, '2025-12-17 10:30:00', NULL),
+('AJ-2025-002', @customer2, 'Area 12, Flat 4B, Blantyre', '+265 992 345 678', 'Deliver to reception', 9800, 1500, 11300, 'Pending', 'Pending', @sales2, '2025-12-17 11:45:00', NULL),
+
+-- Preparing Orders
+('AJ-2025-003', @customer3, 'Mchinji Road, Area 25, Lilongwe', '+265 993 456 789', 'No onions in food please', 15200, 1500, 16700, 'Preparing', 'Paid', @sales1, '2025-12-17 09:15:00', NULL),
+('AJ-2025-004', @customer4, 'Capital Hill, Building 7, Lilongwe', '+265 994 567 890', 'Call upon arrival', 11600, 1500, 13100, 'Preparing', 'Paid', @sales2, '2025-12-17 08:30:00', NULL),
+
+-- Out for Delivery
+('AJ-2025-005', @customer1, 'Area 43, House 123, Lilongwe', '+265 991 234 567', 'Gate code: 1234', 8700, 1500, 10200, 'Out for Delivery', 'Paid', @sales1, '2025-12-17 07:00:00', NULL),
+
+-- Delivered Orders
+('AJ-2025-006', @customer2, 'Area 12, Flat 4B, Blantyre', '+265 992 345 678', NULL, 6500, 1500, 8000, 'Delivered', 'Paid', @sales2, '2025-12-16 18:30:00', '2025-12-16 19:45:00'),
+('AJ-2025-007', @customer3, 'Mchinji Road, Area 25, Lilongwe', '+265 993 456 789', 'Leave at doorstep', 11500, 1500, 13000, 'Delivered', 'Paid', @sales1, '2025-12-16 12:00:00', '2025-12-16 13:20:00'),
+('AJ-2025-008', @customer4, 'Capital Hill, Building 7, Lilongwe', '+265 994 567 890', NULL, 14800, 1500, 16300, 'Delivered', 'Paid', @sales2, '2025-12-15 19:00:00', '2025-12-15 20:15:00'),
+
+-- Cancelled Orders
+('AJ-2025-009', @customer1, 'Area 43, House 123, Lilongwe', '+265 991 234 567', 'Customer cancelled', 5200, 1500, 6700, 'Cancelled', 'Refunded', @sales1, '2025-12-15 14:30:00', NULL),
+
+-- Failed Order (Insufficient Stock)
+('AJ-2025-010', @customer2, 'Area 12, Flat 4B, Blantyre', '+265 992 345 678', NULL, 7600, 1500, 9100, 'Failed - Insufficient Stock', 'Pending', @sales2, '2025-12-17 12:00:00', NULL)
+ON DUPLICATE KEY UPDATE 
+    order_status = VALUES(order_status),
+    payment_status = VALUES(payment_status);
+
+-- ---------------------------------------------------------------------------
+-- Order Items for Sample Orders
+-- ---------------------------------------------------------------------------
+
+-- Order AJ-2025-001 (Pending) - Joyce Chikwanda
+INSERT INTO order_items (order_id, meal_id, meal_name, quantity, unit_price, subtotal) VALUES
+(1, 1, 'Nsima & Beef Stew', 2, 3500, 7000),
+(1, 2, 'Peri-Peri Chicken', 1, 6500, 6500)
+ON DUPLICATE KEY UPDATE quantity = VALUES(quantity);
+
+-- Order AJ-2025-002 (Pending) - Michael Phiri  
+INSERT INTO order_items (order_id, meal_id, meal_name, quantity, unit_price, subtotal) VALUES
+(2, 3, 'Veggie Power Bowl', 1, 5200, 5200),
+(2, 7, 'Butternut Ginger Soup', 2, 2300, 4600)
+ON DUPLICATE KEY UPDATE quantity = VALUES(quantity);
+
+-- Order AJ-2025-003 (Preparing) - Angela Banda
+INSERT INTO order_items (order_id, meal_id, meal_name, quantity, unit_price, subtotal) VALUES
+(3, 2, 'Peri-Peri Chicken', 2, 6500, 13000),
+(3, 5, 'Coconut Cream Cake', 1, 4200, 4200)
+ON DUPLICATE KEY UPDATE quantity = VALUES(quantity);
+
+-- Order AJ-2025-004 (Preparing) - Samuel Kaziwe
+INSERT INTO order_items (order_id, meal_id, meal_name, quantity, unit_price, subtotal) VALUES
+(4, 1, 'Nsima & Beef Stew', 1, 3500, 3500),
+(4, 6, 'Grilled Chambo', 1, 6800, 6800),
+(4, 8, 'Tamarind Glazed Wings', 1, 4500, 4500)
+ON DUPLICATE KEY UPDATE quantity = VALUES(quantity);
+
+-- Order AJ-2025-005 (Out for Delivery) - Joyce Chikwanda
+INSERT INTO order_items (order_id, meal_id, meal_name, quantity, unit_price, subtotal) VALUES
+(5, 4, 'Classic Cheeseburger', 1, 4800, 4800),
+(5, 8, 'Tamarind Glazed Wings', 1, 4500, 4500)
+ON DUPLICATE KEY UPDATE quantity = VALUES(quantity);
+
+-- Order AJ-2025-006 (Delivered) - Michael Phiri
+INSERT INTO order_items (order_id, meal_id, meal_name, quantity, unit_price, subtotal) VALUES
+(6, 2, 'Peri-Peri Chicken', 1, 6500, 6500)
+ON DUPLICATE KEY UPDATE quantity = VALUES(quantity);
+
+-- Order AJ-2025-007 (Delivered) - Angela Banda
+INSERT INTO order_items (order_id, meal_id, meal_name, quantity, unit_price, subtotal) VALUES
+(7, 3, 'Veggie Power Bowl', 2, 5200, 10400),
+(7, 7, 'Butternut Ginger Soup', 1, 3000, 3000)
+ON DUPLICATE KEY UPDATE quantity = VALUES(quantity);
+
+-- Order AJ-2025-008 (Delivered) - Samuel Kaziwe
+INSERT INTO order_items (order_id, meal_id, meal_name, quantity, unit_price, subtotal) VALUES
+(8, 1, 'Nsima & Beef Stew', 2, 3500, 7000),
+(8, 6, 'Grilled Chambo', 1, 6800, 6800),
+(8, 4, 'Classic Cheeseburger', 1, 4800, 4800)
+ON DUPLICATE KEY UPDATE quantity = VALUES(quantity);
+
+-- Order AJ-2025-009 (Cancelled) - Joyce Chikwanda
+INSERT INTO order_items (order_id, meal_id, meal_name, quantity, unit_price, subtotal) VALUES
+(9, 5, 'Coconut Cream Cake', 1, 4200, 4200),
+(9, 7, 'Butternut Ginger Soup', 1, 3000, 3000)
+ON DUPLICATE KEY UPDATE quantity = VALUES(quantity);
+
+-- Order AJ-2025-010 (Failed - Insufficient Stock) - Michael Phiri
+INSERT INTO order_items (order_id, meal_id, meal_name, quantity, unit_price, subtotal) VALUES
+(10, 13, 'Mango Avocado Salad', 2, 3800, 7600)
+ON DUPLICATE KEY UPDATE quantity = VALUES(quantity);
+
+-- ---------------------------------------------------------------------------
+-- Order Status History
+-- ---------------------------------------------------------------------------
+
+-- History for order AJ-2025-005 (Out for Delivery)
+INSERT INTO order_status_history (order_id, old_status, new_status, changed_by, notes, changed_at) VALUES
+(5, 'Pending', 'Preparing', @sales1, 'Order received and started preparation', '2025-12-17 07:15:00'),
+(5, 'Preparing', 'Out for Delivery', @sales1, 'Food ready and handed to delivery', '2025-12-17 11:30:00')
+ON DUPLICATE KEY UPDATE new_status = VALUES(new_status);
+
+-- History for order AJ-2025-006 (Delivered)
+INSERT INTO order_status_history (order_id, old_status, new_status, changed_by, notes, changed_at) VALUES
+(6, 'Pending', 'Preparing', @sales2, 'Order received', '2025-12-16 18:45:00'),
+(6, 'Preparing', 'Out for Delivery', @sales2, 'Ready for delivery', '2025-12-16 19:15:00'),
+(6, 'Out for Delivery', 'Delivered', @sales2, 'Delivered to customer', '2025-12-16 19:45:00')
+ON DUPLICATE KEY UPDATE new_status = VALUES(new_status);
+
+-- History for order AJ-2025-007 (Delivered)
+INSERT INTO order_status_history (order_id, old_status, new_status, changed_by, notes, changed_at) VALUES
+(7, 'Pending', 'Preparing', @sales1, 'Order confirmed', '2025-12-16 12:15:00'),
+(7, 'Preparing', 'Out for Delivery', @sales1, 'Preparation complete', '2025-12-16 12:45:00'),
+(7, 'Out for Delivery', 'Delivered', @sales1, 'Left at doorstep as requested', '2025-12-16 13:20:00')
+ON DUPLICATE KEY UPDATE new_status = VALUES(new_status);
+
+-- History for order AJ-2025-008 (Delivered)
+INSERT INTO order_status_history (order_id, old_status, new_status, changed_by, notes, changed_at) VALUES
+(8, 'Pending', 'Preparing', @sales2, 'Order received', '2025-12-15 19:15:00'),
+(8, 'Preparing', 'Out for Delivery', @sales2, 'Order ready', '2025-12-15 19:45:00'),
+(8, 'Out for Delivery', 'Delivered', @sales2, 'Customer received order', '2025-12-15 20:15:00')
+ON DUPLICATE KEY UPDATE new_status = VALUES(new_status);
+
+-- History for order AJ-2025-009 (Cancelled)
+INSERT INTO order_status_history (order_id, old_status, new_status, changed_by, notes, changed_at) VALUES
+(9, 'Pending', 'Cancelled', @sales1, 'Customer called to cancel order', '2025-12-15 15:00:00')
+ON DUPLICATE KEY UPDATE new_status = VALUES(new_status);
+
+-- History for order AJ-2025-010 (Failed - Insufficient Stock)
+INSERT INTO order_status_history (order_id, old_status, new_status, changed_by, notes, changed_at) VALUES
+(10, 'Pending', 'Failed - Insufficient Stock', @sales2, 'Mango Avocado Salad out of stock', '2025-12-17 12:00:00')
+ON DUPLICATE KEY UPDATE new_status = VALUES(new_status);
+
+-- ---------------------------------------------------------------------------
+-- Create Inventory Management Functions and Triggers
+-- ---------------------------------------------------------------------------
+
+-- Source the inventory functions
+SOURCE inventory_functions.sql;
+
+-- ---------------------------------------------------------------------------
+-- Update statistics for testing
+-- ---------------------------------------------------------------------------
+
+-- Update user activity timestamps
+UPDATE users SET last_login = NOW() WHERE role_id IN (2,3,4);
+
+-- ---------------------------------------------------------------------------
+-- Test Credentials Summary
+-- ---------------------------------------------------------------------------
+/*
+All test passwords: password123
+
+CUSTOMERS:
+- jchikwanda / joyce.chikwanda@email.com (Joyce Chikwanda)
+- mphiri / mphiri@email.com (Michael Phiri)  
+- mbanda / angela.mbanda@email.com (Angela Banda)
+- kaziwe / samuel.kaziwe@email.com (Samuel Kaziwe)
+
+ADMINISTRATORS:
+- admin / admin@auntjoy.test (System Administrator)
+- jadmin / joyce.admin@auntjoy.test (Joyce Admin)
+
+SALES PERSONNEL:
+- jsales / john.sales@auntjoy.test (John Sales)
+- msales / mary.sales@auntjoy.test (Mary Sales)
+
+MANAGERS:
+- jmanager / james.manager@auntjoy.test (James Manager)
+- smanager / sarah.manager@auntjoy.test (Sarah Manager)
+
+INVENTORY STATUS:
+- Out of Stock: Mango Avocado Salad, Chocolate Lava Cake
+- Low Stock: Coconut Cream Cake (4 units), Mixed Grill Platter (2 units)
+- In Stock: All other meals
+*/
+
+SELECT 'Inventory-enabled seeders loaded successfully!' as message;
+SELECT CONCAT('Created ', COUNT(*), ' test users') as user_count FROM users;
+SELECT CONCAT('Created ', COUNT(*), ' sample orders') as order_count FROM orders;
+SELECT CONCAT('Created ', COUNT(*), ' order items') as item_count FROM order_items;
+SELECT CONCAT('Set up inventory for ', COUNT(*), ' meals') as inventory_count FROM meal_inventory;
+
+-- Show current inventory status
+SELECT 
+    m.meal_name,
+    mi.current_stock,
+    m.min_stock_level,
+    CASE 
+        WHEN mi.current_stock = 0 THEN 'OUT OF STOCK'
+        WHEN mi.current_stock <= m.min_stock_level THEN 'LOW STOCK'
+        ELSE 'IN STOCK'
+    END AS status,
+    m.is_available AS available
+FROM meals m
+LEFT JOIN meal_inventory mi ON m.meal_id = mi.meal_id
+WHERE m.track_inventory = 1
+ORDER BY mi.current_stock ASC;

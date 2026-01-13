@@ -82,7 +82,7 @@ require_once __DIR__ . '/../../config/db.php';
 
                 <div class="nav-actions">
                     <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
-                        <span class="theme-icon"><img src="assets/images/icons/moon_16740252.png"></span>
+                        <span class="theme-icon"><img src="/aunt_joy/assets/images/icons/moon_16740252.png"></span>
                     </button>
                     
 

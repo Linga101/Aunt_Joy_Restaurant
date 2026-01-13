@@ -5,6 +5,7 @@
  */
 
 require_once '../../config/db.php';
+require_once '../../config/logger.php';
 
 // Only allow GET requests
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
@@ -90,6 +91,14 @@ try {
     }
     
 } catch (PDOException $e) {
+    logError("Failed to fetch customer orders", [
+        'customer_id' => $customerId,
+        'order_id' => $orderId ?? null,
+        'error' => $e->getMessage(),
+        'file' => __FILE__,
+        'line' => __LINE__
+    ]);
+    
     jsonResponse(false, null, 'Failed to fetch orders: ' . $e->getMessage());
 }
 ?>

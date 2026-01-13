@@ -74,7 +74,7 @@ const payload = {
         full_name: form.full_name.value.trim(),
         email: form.email.value.trim(),
         phone_number: form.phone_number.value.trim(),
-        password,
+        password: password
     };
 
     try {
