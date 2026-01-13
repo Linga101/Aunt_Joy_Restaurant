@@ -88,7 +88,7 @@ function hasRole(...$roles) {
  */
 function requireAuth() {
     if (!isLoggedIn()) {
-        header('Location: /aunt_joy/views/auth/login.php');
+        header('Location: /Aunt_Joy_Restaurant/index.php');
         exit();
     }
 }

@@ -51,34 +51,24 @@ try {
         jsonResponse(false, null, 'User not found');
     }
     
-    // Check if user has orders
-    $orderCheckStmt = $db->prepare("
-        SELECT COUNT(*) as order_count 
-        FROM orders 
-        WHERE customer_id = :user_id
-    ");
-    $orderCheckStmt->execute(['user_id' => $deleteUserId]);
-    $orderCheck = $orderCheckStmt->fetch();
+    // Temporarily disable foreign key checks to force deletion
+    $db->exec('SET FOREIGN_KEY_CHECKS = 0');
     
-    if ($orderCheck['order_count'] > 0) {
-        // Don't delete, just deactivate
-        $updateStmt = $db->prepare("
-            UPDATE users 
-            SET is_active = 0 
-            WHERE user_id = :user_id
-        ");
-        $updateStmt->execute(['user_id' => $deleteUserId]);
-        
-        jsonResponse(true, null, 'User deactivated (has existing orders)');
-    } else {
-        // Safe to delete
-        $deleteStmt = $db->prepare("DELETE FROM users WHERE user_id = :user_id");
-        $deleteStmt->execute(['user_id' => $deleteUserId]);
-        
-        jsonResponse(true, null, 'User deleted successfully');
-    }
+    // Delete the user
+    $deleteStmt = $db->prepare("DELETE FROM users WHERE user_id = :user_id");
+    $deleteStmt->execute(['user_id' => $deleteUserId]);
+    
+    // Re-enable foreign key checks
+    $db->exec('SET FOREIGN_KEY_CHECKS = 1');
+    
+    jsonResponse(true, null, 'User deleted successfully');
     
 } catch (PDOException $e) {
+    // Make sure to re-enable foreign key checks even if there's an error
+    try {
+        $db->exec('SET FOREIGN_KEY_CHECKS = 1');
+    } catch (Exception $ignore) {}
+    
     jsonResponse(false, null, 'Failed to delete user: ' . $e->getMessage());
 }
 ?>

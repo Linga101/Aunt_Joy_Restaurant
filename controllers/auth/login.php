@@ -6,13 +6,16 @@
 
 require_once '../../config/db.php';
 
+initSession();
+
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonResponse(false, null, 'Invalid request method');
 }
 
-// Get input data
-$data = json_decode(file_get_contents('php://input'), true);
+// Get input data from form data
+$email = sanitize($_POST['username'] ?? '');
+$password = $_POST['password'] ?? '';
 
 // Log login attempt for security monitoring
 logSecurity("Login attempt initiated", [
@@ -22,28 +25,23 @@ logSecurity("Login attempt initiated", [
 ]);
 
 // Validate required fields
-if (empty($data['email']) || empty($data['password'])) {
+if (empty($email) || empty($password)) {
     jsonResponse(false, null, 'Email and password are required');
 }
-
-$email = sanitize($data['email']);
-$password = $data['password'];
 
 try {
     $db = getDB();
     
-    // Find user by email
+    // Find user by username or email
     $stmt = $db->prepare("
         SELECT u.*, r.role_name 
         FROM users u
         INNER JOIN roles r ON u.role_id = r.role_id
-        WHERE u.email = :email
+        WHERE (u.username = ? OR u.email = ?)
         AND u.is_active = 1
     ");
     
-    $stmt->execute([
-        'email' => $email
-    ]);
+    $stmt->execute([$email, $email]);
     $user = $stmt->fetch();
     
     // Check if user exists and password is correct
@@ -74,6 +72,7 @@ if (!$user || !verifyPassword($password, $user['password_hash'])) {
     // Remove sensitive data
     unset($user['password_hash']);
     
+<<<<<<< HEAD
     // Log successful login
     logSecurity("User logged in successfully", [
         'user_id' => $user['user_id'],
@@ -85,6 +84,19 @@ if (!$user || !verifyPassword($password, $user['password_hash'])) {
     
     // Return success with user data
     jsonResponse(true, $user, 'Login successful');
+=======
+    // Determine redirect based on role
+    $redirects = [
+        'Customer' => '/Aunt_Joy_Restaurant/views/customer/menu.php',
+        'Administrator' => '/Aunt_Joy_Restaurant/views/admin/dashboard.php',
+        'Sales Personnel' => '/Aunt_Joy_Restaurant/views/sales/dashboard.php',
+        'Manager' => '/Aunt_Joy_Restaurant/views/manager/dashboard.php'
+    ];
+    $redirect = $redirects[$user['role_name']] ?? '/Aunt_Joy_Restaurant/index.php';
+    
+    // Return success with user data and redirect
+    jsonResponse(true, array_merge($user, ['redirect' => $redirect]), 'Login successful');
+>>>>>>> 954f58417debf5cdd8d6cc2c361134972c319be8
     
 } catch (PDOException $e) {
     jsonResponse(false, null, 'Login failed: ' . $e->getMessage());

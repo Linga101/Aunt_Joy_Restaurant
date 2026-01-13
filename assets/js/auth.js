@@ -36,14 +36,14 @@ async function handleLogin(event) {
 
         const userRole = result.data?.role_name;
         const redirects = {
-            Customer: "/aunt_joy/views/customer/menu.php",
-            Administrator: "/aunt_joy/views/admin/dashboard.php",
-            "Sales Personnel": "/aunt_joy/views/sales/dashboard.php",
-            Manager: "/aunt_joy/views/manager/dashboard.php",
+            Customer: "/Aunt_Joy_Restaurant/views/customer/menu.php",
+            Administrator: "/Aunt_Joy_Restaurant/views/admin/dashboard.php",
+            "Sales Personnel": "/Aunt_Joy_Restaurant/views/sales/dashboard.php",
+            Manager: "/Aunt_Joy_Restaurant/views/manager/dashboard.php",
         };
 
         setTimeout(() => {
-            window.location.href = redirects[userRole] || "/aunt_joy/index.php";
+            window.location.href = redirects[userRole] || "/Aunt_Joy_Restaurant/index.php";
         }, 500);
     } catch (error) {
         showAlert(error.message || "Login failed", "error");
@@ -82,7 +82,7 @@ const payload = {
         const result = await apiCall("auth/register.php", "POST", payload);
         showAlert(result.message || "Registration successful", "success");
         setTimeout(() => {
-            window.location.href = "/aunt_joy/views/customer/menu.php";
+            window.location.href = "/Aunt_Joy_Restaurant/views/customer/menu.php";
         }, 600);
     } catch (error) {
         showAlert(error.message || "Registration failed", "error");
@@ -90,4 +90,5 @@ const payload = {
         hideLoading(submitBtn);
     }
 }
+
 

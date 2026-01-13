@@ -1,7 +1,7 @@
 <?php
 /**
  * Delete Meal Controller
- * Handles meal deletion
+ * Handles permanent meal deletion including image removal
  */
 
 require_once '../../config/db.php';
@@ -31,8 +31,8 @@ if (!$mealId) {
 try {
     $db = getDB();
     
-    // Check if meal exists
-    $checkStmt = $db->prepare("SELECT meal_name FROM meals WHERE meal_id = :meal_id");
+    // Check if meal exists and get its image_url
+    $checkStmt = $db->prepare("SELECT meal_name, image_url FROM meals WHERE meal_id = :meal_id");
     $checkStmt->execute(['meal_id' => $mealId]);
     $meal = $checkStmt->fetch();
     
@@ -40,34 +40,32 @@ try {
         jsonResponse(false, null, 'Meal not found');
     }
     
-    // Check if meal is in any orders
-    $orderCheckStmt = $db->prepare("
-        SELECT COUNT(*) as order_count 
-        FROM order_items 
-        WHERE meal_id = :meal_id
-    ");
-    $orderCheckStmt->execute(['meal_id' => $mealId]);
-    $orderCheck = $orderCheckStmt->fetch();
+    // Temporarily disable foreign key checks to force deletion
+    $db->exec('SET FOREIGN_KEY_CHECKS = 0');
     
-    if ($orderCheck['order_count'] > 0) {
-        // Don't delete, just mark as unavailable
-        $updateStmt = $db->prepare("
-            UPDATE meals 
-            SET is_available = 0 
-            WHERE meal_id = :meal_id
-        ");
-        $updateStmt->execute(['meal_id' => $mealId]);
-        
-        jsonResponse(true, null, 'Meal marked as unavailable (has existing orders)');
-    } else {
-        // Safe to delete
-        $deleteStmt = $db->prepare("DELETE FROM meals WHERE meal_id = :meal_id");
-        $deleteStmt->execute(['meal_id' => $mealId]);
-        
-        jsonResponse(true, null, 'Meal deleted successfully');
+    // Delete image file from filesystem if it exists
+    if (!empty($meal['image_url'])) {
+        $imagePath = __DIR__ . '/../../' . $meal['image_url'];
+        if (is_file($imagePath)) {
+            @unlink($imagePath);
+        }
     }
     
+    // Delete from database
+    $deleteStmt = $db->prepare("DELETE FROM meals WHERE meal_id = :meal_id");
+    $deleteStmt->execute(['meal_id' => $mealId]);
+    
+    // Re-enable foreign key checks
+    $db->exec('SET FOREIGN_KEY_CHECKS = 1');
+    
+    jsonResponse(true, null, 'Meal and associated image permanently deleted');
+    
 } catch (PDOException $e) {
+    // Make sure to re-enable foreign key checks even if there's an error
+    try {
+        $db->exec('SET FOREIGN_KEY_CHECKS = 1');
+    } catch (Exception $ignore) {}
+    
     jsonResponse(false, null, 'Failed to delete meal: ' . $e->getMessage());
 }
 ?>

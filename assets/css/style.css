@@ -923,7 +923,7 @@ html[data-theme='dark'] .hero-visual {
 }
 
 .modal-content {
-    background: rgba(30, 58, 138, 0.25);
+    background: var(--surface);
     border: 1.5px solid rgba(100, 150, 255, 0.3);
     border-radius: 25px;
     padding: 3rem 2.5rem;
@@ -935,7 +935,7 @@ html[data-theme='dark'] .hero-visual {
     box-shadow: 0 25px 80px rgba(0, 20, 60, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     animation: slideUp 0.3s ease;
     backdrop-filter: blur(15px);
-    color: var(--text);
+    color: var(--dark);
 }
 
 .modal-content.modal-auth {

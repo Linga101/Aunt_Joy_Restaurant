@@ -69,7 +69,7 @@ include '../templates/header.php';
                             <span>🔒</span>
                             <span>Change Password</span>
                         </button>
-                        <a href="/aunt_joy/controllers/auth/logout.php" class="btn btn-danger">
+                        <a href="/Aunt_Joy_Restaurant/controllers/auth/logout.php" class="btn btn-danger">
                             <span>🚪</span>
                             <span>Logout</span>
                         </a>
@@ -106,7 +106,7 @@ include '../templates/header.php';
 
             <script>
             // Load customer stats
-            fetch('/aunt_joy/controllers/customer/get_orders.php')
+            fetch('/Aunt_Joy_Restaurant/controllers/customer/get_orders.php')
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {

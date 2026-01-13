@@ -4,6 +4,11 @@
  * Different menu items based on user role
  */
 
+// Ensure database config is loaded
+if (!function_exists('getCurrentUserRole')) {
+    require_once __DIR__ . '/../../config/db.php';
+}
+
 $userRole = getCurrentUserRole();
 ?>
 
@@ -21,95 +26,112 @@ $userRole = getCurrentUserRole();
     
     <!-- Navigation Menu -->
     <nav class="sidebar-nav">
+        <!-- DEBUG: Role is <?php echo htmlspecialchars($userRole ?? 'NULL'); ?> -->
         <ul class="nav-list">
-            <?php if($userRole === 'Customer'): ?>
+                <?php if(hasRole('Customer')): ?>
                 <!-- Customer Menu -->
                 <li class="nav-item">
-                    <a href="/aunt_joy/views/customer/menu.php" class="nav-link">
+                    <a href="/Aunt_Joy_Restaurant/views/customer/menu.php" class="nav-link">
                         <span class="nav-icon">🍽️</span>
                         <span>Browse Menu</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/aunt_joy/views/customer/cart.php" class="nav-link">
+                    <a href="/Aunt_Joy_Restaurant/views/customer/cart.php" class="nav-link">
                         <span class="nav-icon">🛒</span>
                         <span>My Cart</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/aunt_joy/views/customer/orders.php" class="nav-link">
+                    <a href="/Aunt_Joy_Restaurant/views/customer/orders.php" class="nav-link">
                         <span class="nav-icon">📦</span>
                         <span>My Orders</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/aunt_joy/views/auth/profile.php" class="nav-link">
+                    <a href="/Aunt_Joy_Restaurant/views/auth/profile.php" class="nav-link">
                         <span class="nav-icon">👤</span>
                         <span>Profile</span>
                     </a>
                 </li>
                 
-            <?php elseif($userRole === 'Administrator'): ?>
+            <?php elseif(hasRole('Administrator')): ?>
                 <!-- Admin Menu -->
                 <li class="nav-item">
-                    <a href="/aunt_joy/views/admin/dashboard.php" class="nav-link">
+                    <a href="/Aunt_Joy_Restaurant/views/admin/dashboard.php" class="nav-link">
                         <span class="nav-icon">📊</span>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/aunt_joy/views/admin/meals.php" class="nav-link">
+                    <a href="/Aunt_Joy_Restaurant/views/admin/meals.php" class="nav-link">
                         <span class="nav-icon">🍽️</span>
                         <span>Meals Management</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/aunt_joy/views/admin/users.php" class="nav-link">
+                    <a href="/Aunt_Joy_Restaurant/views/admin/users.php" class="nav-link">
                         <span class="nav-icon">👥</span>
                         <span>Users Management</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/aunt_joy/views/auth/profile.php" class="nav-link">
+                    <a href="/Aunt_Joy_Restaurant/views/auth/profile.php" class="nav-link">
                         <span class="nav-icon">⚙️</span>
                         <span>Settings</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="/Aunt_Joy_Restaurant/views/admin/categories.php" class="nav-link">
+                        <span class="nav-icon">📂</span>
+                        <span>Categories Management</span>
+                    </a>
+                </li>
                 
-            <?php elseif($userRole === 'Sales Personnel'): ?>
+            <?php elseif(hasRole('Sales Personnel')): ?>
                 <!-- Sales Menu -->
                 <li class="nav-item">
-                    <a href="/aunt_joy/views/sales/dashboard.php" class="nav-link">
+                    <a href="/Aunt_Joy_Restaurant/views/sales/dashboard.php" class="nav-link">
                         <span class="nav-icon">📋</span>
                         <span>Orders</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/aunt_joy/views/auth/profile.php" class="nav-link">
+                    <a href="/Aunt_Joy_Restaurant/views/auth/profile.php" class="nav-link">
                         <span class="nav-icon">👤</span>
                         <span>Profile</span>
                     </a>
                 </li>
                 
-            <?php elseif($userRole === 'Manager'): ?>
+            <?php elseif(hasRole('Manager')): ?>
                 <!-- Manager Menu -->
                 <li class="nav-item">
-                    <a href="/aunt_joy/views/manager/dashboard.php" class="nav-link">
+                    <a href="/Aunt_Joy_Restaurant/views/manager/dashboard.php" class="nav-link">
                         <span class="nav-icon">📊</span>
                         <span>Reports</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/aunt_joy/views/auth/profile.php" class="nav-link">
+                    <a href="/Aunt_Joy_Restaurant/views/auth/profile.php" class="nav-link">
                         <span class="nav-icon">👤</span>
                         <span>Profile</span>
                     </a>
                 </li>
             <?php endif; ?>
             
+            <!-- Categories Management - Show for Managers -->
+            <?php if(hasRole('Manager') && !hasRole('Administrator')): ?>
+                <li class="nav-item">
+                    <a href="/Aunt_Joy_Restaurant/views/admin/categories.php" class="nav-link">
+                        <span class="nav-icon">📂</span>
+                        <span>Categories Management</span>
+                    </a>
+                </li>
+            <?php endif; ?>
+            
             <!-- Logout (All Users) -->
             <li class="nav-item nav-item-logout">
-                <a href="/aunt_joy/controllers/auth/logout.php" class="nav-link">
+                <a href="/Aunt_Joy_Restaurant/controllers/auth/logout.php" class="nav-link">
                     <span class="nav-icon">🚪</span>
                     <span>Logout</span>
                 </a>

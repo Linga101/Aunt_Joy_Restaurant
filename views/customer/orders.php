@@ -18,7 +18,7 @@ include '../templates/header.php';
                 <h1 class="page-title">My Orders</h1>
                 <p class="page-subtitle">Track and manage all your orders in one place</p>
             </div>
-            <a href="/aunt_joy/views/customer/menu.php" class="btn btn-primary btn-icon-right">
+            <a href="/Aunt_Joy_Restaurant/views/customer/menu.php" class="btn btn-primary btn-icon-right">
                 + New Order
             </a>
         </div>
@@ -65,7 +65,7 @@ include '../templates/header.php';
             <div class="empty-state-icon">📦</div>
             <h3 class="empty-state-title">No orders yet</h3>
             <p class="empty-state-text">You haven't placed any orders yet. Browse our menu and place your first order!</p>
-            <a href="/aunt_joy/views/customer/menu.php" class="btn btn-primary btn-lg">
+            <a href="/Aunt_Joy_Restaurant/views/customer/menu.php" class="btn btn-primary btn-lg">
                 Browse Menu
             </a>
         </div>
@@ -119,7 +119,7 @@ async function loadOrders() {
     document.getElementById('emptyState').style.display = 'none';
     
     try {
-        const response = await fetch('/aunt_joy/controllers/customer/get_orders.php');
+        const response = await fetch('/Aunt_Joy_Restaurant/controllers/customer/get_orders.php');
         const result = await response.json();
         
         if (result.success) {
@@ -218,9 +218,13 @@ async function viewOrderDetails(orderId) {
     console.log('Loading details for order:', orderId);
     
     try {
+<<<<<<< HEAD
         const response = await fetch(`/aunt_joy/controllers/customer/get_orders.php?order_id=${orderId}`);
         console.log('Response status:', response.status);
         
+=======
+        const response = await fetch(`/Aunt_Joy_Restaurant/controllers/customer/get_orders.php?order_id=${orderId}`);
+>>>>>>> 954f58417debf5cdd8d6cc2c361134972c319be8
         const result = await response.json();
         console.log('Response data:', result);
         

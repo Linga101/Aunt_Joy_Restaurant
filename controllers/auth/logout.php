@@ -15,5 +15,10 @@ session_start();
 $_SESSION['logout_message'] = 'You have been successfully logged out';
 
 // Redirect to login page
+<<<<<<< HEAD
 redirect('/aunt_joy/views/auth/login-modal.php');
 ?>
+=======
+redirect('/Aunt_Joy_Restaurant/index.php');
+?>
+>>>>>>> 954f58417debf5cdd8d6cc2c361134972c319be8

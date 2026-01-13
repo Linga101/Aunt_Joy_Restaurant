@@ -4,7 +4,7 @@
  */
 
 // API Base URL
-const API_BASE = '/aunt_joy/controllers/';
+const API_BASE = '/Aunt_Joy_Restaurant/controllers/';
 
 /**
  * Resolve endpoint relative to controllers folder
@@ -382,7 +382,7 @@ function applyTheme(theme) {
     const toggle = document.getElementById('themeToggle');
     if (toggle) {
         toggle.dataset.theme = normalized;
-        toggle.innerHTML = normalized === 'dark' ? '<span class="theme-icon"><img src="/aunt_joy/assets/images/icons/summer_15069875.png" alt="Sun icon"></span>' : '<span class="theme-icon"><img src="/aunt_joy/assets/images/icons/moon_16740252.png" alt="Moon icon"></span>';
+        toggle.innerHTML = normalized === 'dark' ? '<span class="theme-icon"><img src="/Aunt_Joy_Restaurant/assets/images/icons/summer_15069875.png" alt="Sun icon"></span>' : '<span class="theme-icon"><img src="/Aunt_Joy_Restaurant/assets/images/icons/moon_16740252.png" alt="Moon icon"></span>';
         toggle.setAttribute('aria-label', normalized === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
     }
 }
@@ -639,8 +639,8 @@ function openAuthModal(authType = 'login') {
     
     // Load auth form via AJAX
     const url = authType === 'login' 
-        ? '/aunt_joy/views/auth/login-modal.php' 
-        : '/aunt_joy/views/auth/register-modal.php';
+        ? '/Aunt_Joy_Restaurant/views/auth/login-modal.php' 
+        : '/Aunt_Joy_Restaurant/views/auth/register-modal.php';
     
     fetch(url)
         .then(response => response.text())
@@ -721,7 +721,7 @@ async function submitLoginForm() {
     const remember = form.remember.checked;
     
     try {
-        const response = await fetch('/aunt_joy/controllers/auth/login.php', {
+        const response = await fetch('/Aunt_Joy_Restaurant/controllers/auth/login.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -734,7 +734,7 @@ async function submitLoginForm() {
         if (data.success) {
             showNotification('Login successful!', 'success');
             setTimeout(() => {
-                window.location.href = data.redirect || '/aunt_joy/index.php';
+                window.location.href = data.data?.redirect || '/Aunt_Joy_Restaurant/index.php';
             }, 1000);
         } else {
             showNotification(data.message || 'Login failed', 'error');
@@ -776,7 +776,7 @@ async function submitRegisterForm() {
     };
     
     try {
-        const response = await fetch('/aunt_joy/controllers/auth/register.php', {
+        const response = await fetch('/Aunt_Joy_Restaurant/controllers/auth/register.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -790,7 +790,7 @@ async function submitRegisterForm() {
         if (data.success) {
             showNotification('Registration successful! Redirecting...', 'success');
             setTimeout(() => {
-                window.location.href = '/aunt_joy/views/customer/menu.php';
+                window.location.href = '/Aunt_Joy_Restaurant/views/customer/menu.php';
             }, 1000);
         } else {
             showNotification(data.message || 'Registration failed', 'error');

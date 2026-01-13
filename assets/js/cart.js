@@ -240,12 +240,16 @@ function removeFromCart(index) {
     window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { cart } }));
 }
 
+<<<<<<< HEAD
 /**
  * Update cart item quantity (inventory-driven)
  * @param {number} index - Item index
  * @param {number} change - Quantity change (+1 or -1)
  */
 async function updateQuantity(index, change) {
+=======
+function updateQuantity(index, change) {
+>>>>>>> 954f58417debf5cdd8d6cc2c361134972c319be8
     const cart = getCart();
     if (!cart[index]) return;
     
@@ -269,6 +273,7 @@ async function updateQuantity(index, change) {
             return;
         }
         
+<<<<<<< HEAD
         // Check against available stock
         if (newQuantity > availability.maxQuantity) {
             if (availability.trackInventory) {
@@ -283,6 +288,8 @@ async function updateQuantity(index, change) {
             cart[index].quantity = newQuantity;
         }
         
+=======
+>>>>>>> 954f58417debf5cdd8d6cc2c361134972c319be8
         saveCart(cart);
         updateCartCount();
         
