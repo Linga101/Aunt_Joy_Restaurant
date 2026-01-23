@@ -119,16 +119,6 @@ $userRole = getCurrentUserRole();
                 </li>
             <?php endif; ?>
             
-            <!-- Categories Management - Show for Managers -->
-            <?php if(hasRole('Manager') && !hasRole('Administrator')): ?>
-                <li class="nav-item">
-                    <a href="/Aunt_Joy_Restaurant/views/admin/categories.php" class="nav-link">
-                        <span class="nav-icon">📂</span>
-                        <span>Categories Management</span>
-                    </a>
-                </li>
-            <?php endif; ?>
-            
             <!-- Logout (All Users) -->
             <li class="nav-item nav-item-logout">
                 <a href="/Aunt_Joy_Restaurant/controllers/auth/logout.php" class="nav-link">
