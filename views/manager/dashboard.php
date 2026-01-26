@@ -58,7 +58,7 @@ include '../templates/header.php';
                         <select id="yearSelect" class="form-control">
                             <?php
                             $defaultYear = 2025; // Year with sample data
-                            for ($year = 2023; $year <= 2027; $year++) {
+                            for ($year = 2025; $year <= 2030; $year++) {
                                 $selected = ($year == $defaultYear) ? 'selected' : '';
                                 echo "<option value=\"$year\" $selected>$year</option>";
                             }
@@ -66,13 +66,8 @@ include '../templates/header.php';
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label>&nbsp;</label>
-                        <button class="btn btn-primary btn-block" onclick="generateReport()">
-                            📊 Generate Report
-                        </button>
-                    </div>
 
+                <!--export report to excell or pdf formats!-->
                     <div class="form-group">
                         <label>&nbsp;</label>
                         <div class="export-buttons">
@@ -170,8 +165,8 @@ include '../templates/header.php';
 </div>
 
 <script>
-let currentMonth = 12; // December (where sample data exists)
-let currentYear = 2025; // Year with sample data
+let currentMonth = 1; // December (where sample data exists)
+let currentYear = 2026; // Year with sample data
 
 // Set current month/year on load
 document.addEventListener('DOMContentLoaded', function() {
